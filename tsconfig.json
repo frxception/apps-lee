@@ -31,7 +31,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx", "src/vue-apollo.js"
+    "tests/**/*.tsx", "src/vue-apollo.js", "src/components/toast/index.js"
   ],
   "exclude": [
     "node_modules"

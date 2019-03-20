@@ -1,25 +1,62 @@
 import Vue from 'vue';
-import Router from 'vue-router';
-import Home from './views/Home.vue';
+import Router, { Route, RouteConfig } from 'vue-router';
+import nprogress from 'nprogress';
+import store from './store';
 
 Vue.use(Router);
 
-export default new Router({
+nprogress.configure({ showSpinner: false });
+
+const routes: RouteConfig[] = [
+  {
+    path: '/login',
+    name: '登录',
+    component: () => import('@/views/login.vue'),
+  },
+  {
+    path: '/',
+    redirect: 'dashboard',
+    component: () => import('@/views/back.vue'),
+    meta: { auth: true },
+    children: [
+      {
+        path: '/dashboard',
+        name: '首页',
+        component: () => import('@/views/dashboard.vue'),
+      },
+    ],
+  },
+];
+
+const router: Router = new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-    },
-  ],
+  routes,
 });
+
+router.beforeEach((to: Route, from: Route, next: any) => {
+  nprogress.start();
+  const auth = to.matched.some((record) => record.meta.auth);
+  const token = store.state.token;
+  if (auth) {
+    if (token) {
+      next();
+    } else {
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath,
+        },
+      });
+    }
+  } else {
+    next();
+    nprogress.done();
+  }
+  nprogress.done();
+});
+
+router.afterEach(() => {
+  nprogress.done();
+});
+
+export default router;

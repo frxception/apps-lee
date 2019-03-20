@@ -6,7 +6,7 @@ import { HttpLink } from 'apollo-link-http';
 import Vue from 'vue';
 import VueApollo from 'vue-apollo';
 import router from './router';
-// import store from './store/index';
+import store from './store';
 
 Vue.use(VueApollo);
 
@@ -16,7 +16,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   }
   operation.setContext({
     headers: {
-      // Authorization: `bearer ${store.state.token}`,
+      Authorization: `bearer ${store.state.token}`,
     },
   });
   return forward(operation);
