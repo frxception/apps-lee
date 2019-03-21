@@ -1,6 +1,6 @@
 <template lang="pug">
 v-app(:dark='dark')
-    v-navigation-drawer(light,persistent='', :width="256" :mini-variant='miniVariant', :clipped='clipped', v-model='drawer', enable-resize-watcher='', fixed='', app='')
+    v-navigation-drawer(persistent='', :width="256" :mini-variant='miniVariant', :clipped='clipped', v-model='drawer', enable-resize-watcher='', fixed='', app='')
       v-img(src="https://cdn.vuetifyjs.com/images/parallax/material.jpg",:aspect-ratio="16/9")
               v-layout(pa-2 column fill-height).lightbox.white--text
                   v-spacer
@@ -42,8 +42,8 @@ v-app(:dark='dark')
           router-view
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
+import { Vue, Component, Prop } from "vue-property-decorator";
+import { Action } from "vuex-class";
 @Component({})
 export default class Back extends Vue {
   private clipped: boolean = false;
@@ -57,51 +57,51 @@ export default class Back extends Vue {
   private drawer: boolean = true;
   private items: any = [
     {
-      icon: 'home',
-      color: 'purple',
-      title: '首页',
-      path: '/dashboard',
+      icon: "home",
+      color: "purple",
+      title: "首页",
+      path: "/dashboard"
     },
     {
-      divider: true,
+      divider: true
     },
     {
-      icon: 'merge_type',
-      color: 'orange',
-      title: '分类',
-      path: '/category',
+      icon: "merge_type",
+      color: "orange",
+      title: "分类",
+      path: "/category"
     },
     {
-      icon: 'local_offer',
-      color: 'red',
-      title: '标签',
-      path: '/tags',
+      icon: "local_offer",
+      color: "red",
+      title: "标签",
+      path: "/tags"
     },
     {
-      icon: 'drafts',
-      color: 'purple',
-      title: '文章',
-      path: '/article',
+      icon: "drafts",
+      color: "purple",
+      title: "文章",
+      path: "/article"
     },
     {
-      icon: 'message',
-      color: 'pink',
-      title: '评论',
+      icon: "message",
+      color: "pink",
+      title: "评论"
     },
     {
-      icon: 'folder',
-      color: 'pink',
-      title: '附件',
-      path: '/annex',
+      icon: "folder",
+      color: "pink",
+      title: "附件",
+      path: "/annex"
     },
     {
-      divider: true,
+      divider: true
     },
     {
-      icon: 'settings',
-      color: 'cyan',
-      title: '设置',
-    },
+      icon: "settings",
+      color: "cyan",
+      title: "设置"
+    }
   ];
 }
 </script>

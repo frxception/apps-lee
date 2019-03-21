@@ -29,6 +29,21 @@ const routes: RouteConfig[] = [
         name: '分类',
         component: () => import('@/components/category/index.vue'),
       },
+      {
+        path: '/article',
+        name: '文章',
+        component: () => import('@/components/article/index.vue'),
+      },
+      {
+        path: '/article/create',
+        name: '创建文章',
+        component: () => import('@/components/article/create.vue'),
+      },
+      {
+        path: '/article/edit/:id',
+        name: '修改文章',
+        component: () => import('@/components/article/edit.vue'),
+      },
     ],
   },
 ];
