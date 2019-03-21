@@ -1,6 +1,6 @@
 <template lang="pug">
 v-app(:dark='dark')
-    v-navigation-drawer(persistent='', :width="256" :mini-variant='miniVariant', :clipped='clipped', v-model='drawer', enable-resize-watcher='', fixed='', app='')
+    v-navigation-drawer(light,persistent='', :width="256" :mini-variant='miniVariant', :clipped='clipped', v-model='drawer', enable-resize-watcher='', fixed='', app='')
       v-img(src="https://cdn.vuetifyjs.com/images/parallax/material.jpg",:aspect-ratio="16/9")
               v-layout(pa-2 column fill-height).lightbox.white--text
                   v-spacer

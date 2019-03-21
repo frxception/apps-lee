@@ -24,6 +24,11 @@ const routes: RouteConfig[] = [
         name: '首页',
         component: () => import('@/views/dashboard.vue'),
       },
+      {
+        path: '/category',
+        name: '分类',
+        component: () => import('@/components/category/index.vue'),
+      },
     ],
   },
 ];
