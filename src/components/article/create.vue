@@ -95,10 +95,10 @@ div
                 v-text-field(label="Select Image" type="file" prepend-icon='attach_file')
 </template>
 <script lang="ts">
-import "@/assets/main.css";
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import gql from "graphql-tag";
-import twemoji from "twemoji";
+import '@/assets/main.css';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import gql from 'graphql-tag';
+import twemoji from 'twemoji';
 const CREATE = gql`
   mutation($article: ArticleInput) {
     createArticle(article: $article) {
@@ -147,7 +147,7 @@ const CREATE = gql`
           //   `Message: [Category result]: ${JSON.stringify(result)}`
           // );
         },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: 'cache-and-network',
       };
     },
     allCategoryByTree() {
@@ -175,7 +175,7 @@ const CREATE = gql`
           //   `Message: [Category result]: ${JSON.stringify(result)}`
           // );
         },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: 'cache-and-network',
       };
     },
     allTags() {
@@ -195,10 +195,10 @@ const CREATE = gql`
         //     `Message: [Category result]: ${JSON.stringify(result)}`
         //   );
         // },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: 'cache-and-network',
       };
-    }
-  }
+    },
+  },
 })
 export default class Operating extends Vue {
   public leetree: any = [];
@@ -228,76 +228,76 @@ export default class Operating extends Vue {
 
   private publicstate: object[] = [
     {
-      k: "publish",
-      v: "公开"
+      k: 'publish',
+      v: '公开',
     },
     {
-      k: "hidden",
-      v: "隐藏"
+      k: 'hidden',
+      v: '隐藏',
     },
     {
-      k: "password",
-      v: "密码保护"
+      k: 'password',
+      v: '密码保护',
     },
     {
-      k: "private",
-      v: "私有"
-    }
+      k: 'private',
+      v: '私有',
+    },
   ];
   private article: any = {
     title: {
-      value: "标题",
-      rule: [(v: string) => !!v || "标题为必填项!"]
+      value: '标题',
+      rule: [(v: string) => !!v || '标题为必填项!'],
     },
     slug: {
-      value: "",
-      rule: []
+      value: '',
+      rule: [],
     },
     category: {
-      value: "",
-      rule: [(v: string) => !!v || "分类不可为空!"]
+      value: '',
+      rule: [(v: string) => !!v || '分类不可为空!'],
     },
     html: {
-      value: "",
-      rule: []
+      value: '',
+      rule: [],
     },
     text: {
       value: `# Hello \n\n有钱就是可以为所欲为！8-)\n\n但我特么真的没钱 :cry:\n\n`,
-      rule: []
+      rule: [],
     },
     // 内容类别:{"1":"文章","2":"页面","3":"说说"}
     type: {
       value: 1,
-      rule: []
+      rule: [],
     },
     // 发布状态:{"1":"发布","0":"草稿"}
     status: {
       value: 1,
-      rule: []
+      rule: [],
     },
     // 内容状态:{"publish":"公开","hidden":"隐藏","password":"密码保护"}
     publish: {
-      value: "publish",
-      rule: []
+      value: 'publish',
+      rule: [],
     },
     password: {
-      value: "",
-      rule: [(v: string) => !!v || "密码为必填项!"]
+      value: '',
+      rule: [(v: string) => !!v || '密码为必填项!'],
     },
     // 是否置顶
     isTop: {
       value: false,
-      rule: []
+      rule: [],
     },
     tags: {
-      value: "",
-      rule: [(v: string) => !!v || "Tags不可为空!"]
+      value: '',
+      rule: [(v: string) => !!v || 'Tags不可为空!'],
     },
     // 是否允许评论
     allowComment: {
       value: true,
-      rule: []
-    }
+      rule: [],
+    },
   };
 
   private lenth: number = 0;
@@ -311,14 +311,14 @@ export default class Operating extends Vue {
   // }
 
   private init() {
-    const markdown = require("markdown-it")().use(require("markdown-it-emoji"));
+    const markdown = require('markdown-it')().use(require('markdown-it-emoji'));
     this.article.html.value = markdown.render(this.article.text.value);
     this.article.html.value = twemoji.parse(this.article.html.value, {
-      size: "16x16",
-      base: "http://twemoji.maxcdn.com/"
+      size: '16x16',
+      base: 'http://twemoji.maxcdn.com/',
     });
     // 行数
-    this.lenth = this.article.text.value.split("\n").length;
+    this.lenth = this.article.text.value.split('\n').length;
     // 计算所有字符
     this.wordcount = this.article.text.value.length;
     // 计算汉字
@@ -350,33 +350,32 @@ export default class Operating extends Vue {
               isTop: await this.article.isTop.value,
               allowComment: await this.article.allowComment.value,
               tags: await this.article.tags.value,
-              password: await this.article.password.value
-            }
-          }
+              password: await this.article.password.value,
+            },
+          },
         });
-        this.$toast(result as any);
-        (this.$refs.form as any).reset();
-        this.$router.replace("/article");
+        // (this.$refs.form as any).reset();
+        this.$router.replace('/article');
+        this.$toast(`新增文章 '${result.data.createArticle.title} '`);
       } catch (error) {
-        // 哎呀,好像出问题了
-        this.$toast(error);
+        this.$toast(`哎呀, 好像出问题了${error}`);
       }
     }
     this.loading = false;
   }
   // 更改公开度
   private async select(): Promise<void> {
-    if (this.article.publish.value === "password") {
+    if (this.article.publish.value === 'password') {
       this.istop = false;
       this.password = true;
-    } else if (this.article.publish.value === "publish") {
+    } else if (this.article.publish.value === 'publish') {
       this.istop = true;
       this.password = false;
-      this.article.password.value = "";
+      this.article.password.value = '';
     } else {
       this.istop = true;
       this.password = false;
-      this.article.password.value = "";
+      this.article.password.value = '';
     }
   }
 

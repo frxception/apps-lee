@@ -19,8 +19,8 @@
                 v-btn(flat small) 删除选中数据
               v-btn(flat small) 全部删除
     v-card(flat)
-        v-btn(fab absolute small top right dark color="info" to="/article/create")
-          v-icon
+        v-btn(@click="create" fab absolute small top right dark color="info")
+          v-icon add
         v-data-table(v-model="selected",:no-results-text="`没有找到和 ' ${search} ' 相关的数据哦`",
         no-data-text="还没有数据哦,快去添加条吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
         :headers="headers",:items="allArticle",:search="search",select-all,rows-per-page-text="每页行数")
@@ -70,9 +70,9 @@
                   v-icon(small) delete
 </template>
 <script lang="ts">
-import gql from "graphql-tag";
-import { Vue, Component, Watch } from "vue-property-decorator";
-import { Action, Mutation, State } from "vuex-class";
+import gql from 'graphql-tag';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Action, Mutation, State } from 'vuex-class';
 
 @Component({
   apollo: {
@@ -116,15 +116,15 @@ import { Action, Mutation, State } from "vuex-class";
         result(result: object) {
           /* tslint:disable:no-console */
           console.log(
-            "%cINFO",
-            "background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;",
-            `Message: [Category result]: ${JSON.stringify(result)}`
+            '%cINFO',
+            'background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
+            `Message: [Category result]: ${JSON.stringify(result)}`,
           );
         },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: 'cache-and-network',
       };
-    }
-  }
+    },
+  },
 })
 export default class Article extends Vue {
   get pages() {
@@ -142,38 +142,42 @@ export default class Article extends Vue {
     descending: false,
     page: 1,
     rowsPerPage: 10,
-    sortBy: "id",
-    totalItems: 0
+    sortBy: 'id',
+    totalItems: 0,
   };
   public selected: object = [];
   public selectedcount: number = 0;
   public allArticle: any;
-  public search: string = "";
+  public search: string = '';
   private headers: object = [
     {
-      text: "ID",
-      align: "left",
-      value: "id"
+      text: 'ID',
+      align: 'left',
+      value: 'id',
     },
-    { text: "标题", value: "label" },
-    { text: "别名", value: "slug" },
-    { text: "分类", value: "category" },
+    { text: '标题', value: 'label' },
+    { text: '别名', value: 'slug' },
+    { text: '分类', value: 'category' },
     // { text: "Tags", value: "tags" },
-    { text: "作者", value: "count" },
-    { text: "排序", value: "order" },
-    { text: "模板", value: "template" },
-    { text: "发布状态", value: "status" },
-    { text: "类型", value: " type" },
-    { text: "公开度", value: "public" },
-    { text: "是否置顶", value: "isTop" },
-    { text: "是否允许评论", value: "allowComment" },
-    { text: "创建时间", value: "createdAt" },
-    { text: "最后修改时间", value: "updatedAt" },
-    { text: "操作", value: "", align: "center" }
+    { text: '作者', value: 'count' },
+    { text: '排序', value: 'order' },
+    { text: '模板', value: 'template' },
+    { text: '发布状态', value: 'status' },
+    { text: '类型', value: ' type' },
+    { text: '公开度', value: 'public' },
+    { text: '是否置顶', value: 'isTop' },
+    { text: '是否允许评论', value: 'allowComment' },
+    { text: '创建时间', value: 'createdAt' },
+    { text: '最后修改时间', value: 'updatedAt' },
+    { text: '操作', value: '', align: 'center' },
   ];
-  @Watch("selected")
+  @Watch('selected')
   public onSelectedChanged(val: object, oldVal: any) {
     this.selectedcount = Object.keys(val).length;
+  }
+
+  public create() {
+    this.$router.push('/article/create');
   }
 }
 </script>
