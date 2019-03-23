@@ -32,7 +32,7 @@
               td {{ props.item.slug }}
               td {{ props.item.category.label }}
               td {{ props.item.author.name }}
-              td {{ props.item.order }}
+              //- td {{ props.item.order }}
               td(v-if="props.item.template")
                 span 发布
               td(v-else)
@@ -64,7 +64,7 @@
               td {{ props.item.createdAt }}
               td {{ props.item.updatedAt }}
               td.justify-center.layout.px-0
-                v-btn(small flat icon color="info")
+                v-btn(small flat icon color="info" @click="edit(props)")
                   v-icon(small) edit
                 v-btn(small flat icon color="error")
                   v-icon(small) delete
@@ -160,7 +160,7 @@ export default class Article extends Vue {
     { text: '分类', value: 'category' },
     // { text: "Tags", value: "tags" },
     { text: '作者', value: 'count' },
-    { text: '排序', value: 'order' },
+    // { text: '排序', value: 'order' },
     { text: '模板', value: 'template' },
     { text: '发布状态', value: 'status' },
     { text: '类型', value: ' type' },
@@ -178,6 +178,9 @@ export default class Article extends Vue {
 
   public create() {
     this.$router.push('/article/create');
+  }
+  public edit(props: any) {
+    this.$router.push(`/article/edit/${props.item.id}`);
   }
 }
 </script>
