@@ -9,7 +9,7 @@ import router from './router';
 import store from './store';
 
 Vue.use(VueApollo);
-/* tslint:disable:no-console */
+
 const authMiddleware = new ApolloLink((operation, forward) => {
   if (!forward) {
     return null;
@@ -28,11 +28,11 @@ const httpLink = new HttpLink({
 });
 
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
-  console.log(
-    '%cError',
-    'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
-    `Message: [graphQLErrors]: ${JSON.stringify(graphQLErrors)}`,
-  );
+  // console.log(
+  //   '%cError',
+  //   'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
+  //   `Message: [graphQLErrors]: ${JSON.stringify(graphQLErrors)}`,
+  // );
   if (graphQLErrors) {
     const message: any = graphQLErrors.map((msg) => (msg.message as any).statusCode)[0]
     if (message === 401 || message === 403) {

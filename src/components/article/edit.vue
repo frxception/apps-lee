@@ -39,7 +39,7 @@ div
                     span.iconfont.icon-expand
                 div.content
                   div.editor
-                    v-textarea(@input="init",@focus="textarealoading=true",@blur="textarealoading=false",:loading="textarealoading",:single-line="true",v-model="article.text.value",:flat="true",:rows="20",label="输入内容",:clearable="false")
+                    v-textarea(@input="input",@focus="textarealoading=true",@blur="textarealoading=false",:loading="textarealoading",:single-line="true",v-model="article.text.value",:flat="true",:rows="20",label="输入内容",:clearable="false")
                   div.preview(v-html="article.html.value")
                     label(class="v-label v-label--active theme--light") 预览内容
               span 共计:
@@ -99,11 +99,6 @@ import '@/assets/main.css';
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import gql from 'graphql-tag';
 import twemoji from 'twemoji';
-// const UPDATE = gql`
-//   mutation($article: ArticleInput) {
-
-//   }
-// `;
 const GETBYID = gql`
   query getArticleById($id: Int!) {
     getArticleById(id: $id) {
@@ -112,16 +107,32 @@ const GETBYID = gql`
       slug
       text
       html
-      order
       category {
+        id
         label
-      }
-      author {
-        name
       }
       tags {
         label
       }
+      type
+      status
+      publish
+      password
+      isTop
+      allowComment
+    }
+  }
+`;
+
+const UPDATE = gql`
+  mutation updateArticle($id: Int!, $article: ArticleInput) {
+    updateArticle(id: $id, article: $article) {
+      id
+      title
+      slug
+      text
+      html
+      order
       template
       type
       status
@@ -194,6 +205,7 @@ const GETBYID = gql`
   },
 })
 export default class Operating extends Vue {
+  public updateId?: number;
   public leetree: any = [];
   public allCategory: any;
   public allCategoryByTree: any;
@@ -294,26 +306,18 @@ export default class Operating extends Vue {
   };
 
   private lenth: number = 0;
-  // private html: string = "";
-  private text: string = this.article.text.value;
 
-  // TODO: 深度监听暂时有问题先改为input
-  // @Watch("article", { deep: true })
-  // onArticleChanged(val: object, oldVal: any) {
-  //   this.init();
-  // }
-
-  private init() {
-    this.$apollo.query({
-      query: GETBYID,
-      variables: {
-        id: Number(this.$route.params.id),
-      },
+  private async input() {
+    const markdown = require('markdown-it')().use(require('markdown-it-emoji'));
+    this.article.html.value = await markdown.render(this.article.text.value);
+    this.article.html.value = await twemoji.parse(this.article.html.value, {
+      size: '16x16',
+      base: 'http://twemoji.maxcdn.com/',
     });
     // 行数
-    this.lenth = this.article.text.value.split('\n').length;
+    this.lenth = await this.article.text.value.split('\n').length;
     // 计算所有字符
-    this.wordcount = this.article.text.value.length;
+    this.wordcount = await this.article.text.value.length;
     // 计算汉字
     this.character = 0;
     // 计算符号
@@ -324,10 +328,67 @@ export default class Operating extends Vue {
     this.emoji = 0;
   }
 
+  private async init() {
+    try {
+      const result = await this.$apollo.query({
+        query: GETBYID,
+        variables: {
+          id: await Number(this.$route.params.id),
+        },
+        fetchPolicy: 'no-cache',
+      });
+      this.article.title.value = await result.data.getArticleById.title;
+      this.article.slug.value = await result.data.getArticleById.slug;
+      this.article.category.value = await result.data.getArticleById.category
+        .id;
+      this.article.text.value = await result.data.getArticleById.text;
+      this.article.html.value = await result.data.getArticleById.html;
+      this.article.type.value = await result.data.getArticleById.type;
+      this.article.status.value = await result.data.getArticleById.status;
+      this.article.publish.value = await result.data.getArticleById.publish;
+      this.article.isTop.value = await result.data.getArticleById.isTop;
+      this.article.allowComment.value = await result.data.getArticleById
+        .allowComment;
+      this.article.tags.value = await result.data.getArticleById.tags;
+      this.article.password.value = await result.data.getArticleById.password;
+      this.updateId = await result.data.getArticleById.id;
+      await this.select();
+    } catch (error) {
+      // console.info(error);
+    }
+  }
+
   private async submit(): Promise<void> {
     this.loading = true;
     if ((this.$refs.form as any).validate()) {
-      return;
+      try {
+        const result = await this.$apollo.mutate({
+          mutation: UPDATE,
+          variables: {
+            id: await this.updateId,
+            article: {
+              title: await this.article.title.value,
+              slug: await this.article.slug.value,
+              category: await this.article.category.value,
+              text: await this.article.text.value,
+              html: await this.article.html.value,
+              type: await this.article.type.value,
+              status: await this.article.status.value,
+              publish: await this.article.publish.value,
+              isTop: (await this.article.isTop.value) ? true : false,
+              allowComment: (await this.article.allowComment.value)
+                ? true
+                : false,
+              tags: await this.article.tags.value,
+              password: await this.article.password.value,
+            },
+          },
+        });
+        this.$router.replace('/article');
+        this.$toast(`修改文章 '${result.data.updateArticle.title} '`);
+      } catch (error) {
+        this.$toast(`哎呀, 好像出问题了${error}`);
+      }
     }
     this.loading = false;
   }

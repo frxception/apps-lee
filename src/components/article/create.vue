@@ -301,8 +301,6 @@ export default class Operating extends Vue {
   };
 
   private lenth: number = 0;
-  // private html: string = "";
-  private text: string = this.article.text.value;
 
   // TODO: 深度监听暂时有问题先改为input
   // @Watch("article", { deep: true })

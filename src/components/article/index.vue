@@ -115,11 +115,11 @@ import { Action, Mutation, State } from 'vuex-class';
         `,
         result(result: object) {
           /* tslint:disable:no-console */
-          console.log(
-            '%cINFO',
-            'background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
-            `Message: [Category result]: ${JSON.stringify(result)}`,
-          );
+          // console.log(
+          //   '%cINFO',
+          //   'background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
+          //   `Message: [Category result]: ${JSON.stringify(result)}`,
+          // );
         },
         fetchPolicy: 'cache-and-network',
       };
@@ -180,7 +180,7 @@ export default class Article extends Vue {
     this.$router.push('/article/create');
   }
   public edit(props: any) {
-    this.$router.push(`/article/edit/${props.item.id}`);
+    this.$router.replace(`/article/edit/${props.item.id}`);
   }
 }
 </script>
