@@ -31,12 +31,12 @@
               td {{ props.item.title }}
               td {{ props.item.slug }}
               td {{ props.item.category.label }}
-              td {{ props.item.author.name }}
+              td {{ props.item.author.name}}
               //- td {{ props.item.order }}
-              td(v-if="props.item.template")
-                span 发布
-              td(v-else)
-                span null
+              //- td(v-if="props.item.template")
+              //-   span 发布
+              //- td(v-else)
+              //-   span null
               td(v-if="props.item.status")
                 span 发布
               td(v-else)
@@ -87,6 +87,15 @@ import { Action, Mutation, State } from 'vuex-class';
               text
               html
               order
+              category {
+                label
+              }
+              author {
+                name
+              }
+              tags {
+                label
+              }
               template
               type
               status
@@ -98,18 +107,6 @@ import { Action, Mutation, State } from 'vuex-class';
               createdAt
               updatedAt
               dataVersion
-              author {
-                uid
-                name
-              }
-              category {
-                id
-                label
-              }
-              tags {
-                id
-                label
-              }
             }
           }
         `,
@@ -161,7 +158,7 @@ export default class Article extends Vue {
     // { text: "Tags", value: "tags" },
     { text: '作者', value: 'count' },
     // { text: '排序', value: 'order' },
-    { text: '模板', value: 'template' },
+    // { text: '模板', value: 'template' },
     { text: '发布状态', value: 'status' },
     { text: '类型', value: ' type' },
     { text: '公开度', value: 'public' },

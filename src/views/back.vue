@@ -66,7 +66,7 @@ export default class Back extends Vue {
       divider: true,
     },
     {
-      icon: 'merge_type',
+      icon: 'bookmark',
       color: 'orange',
       title: '分类',
       path: '/category',
@@ -83,6 +83,12 @@ export default class Back extends Vue {
       title: '文章',
       path: '/article',
     },
+    // {
+    //   icon: 'pages',
+    //   color: 'purple',
+    //   title: '页面',
+    //   path: '/article',
+    // },
     {
       icon: 'message',
       color: 'pink',

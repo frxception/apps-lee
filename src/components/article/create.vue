@@ -37,11 +37,20 @@ div
                     span.iconfont.icon-save
                     span.iconfont.icon-774bianjiqi_yulan
                     span.iconfont.icon-expand
-                div.content
-                  div.editor
+                v-layout(wrap)
+                  v-flex(d-flex xs12 sm6 :class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }")
                     v-textarea(@input="init",@focus="textarealoading=true",@blur="textarealoading=false",:loading="textarealoading",:single-line="true",v-model="article.text.value",:flat="true",:rows="20",label="输入内容",:clearable="false")
-                  div.preview(v-html="article.html.value")
-                    label(class="v-label v-label--active theme--light") 预览内容
+                  v-flex(d-flex xs12 sm6 :class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }")
+                    //- v-select(attach label="预览" :items="preview",v-model="type")
+                    div(v-if="type === 'preview'" v-html="article.html.value")
+                    v-textarea(v-else :value="article.html.value",auto-grow box readonly)
+                //- div.content(:class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }")
+                //-   div.editor
+                //-     v-textarea(@input="init",@focus="textarealoading=true",@blur="textarealoading=false",:loading="textarealoading",:single-line="true",v-model="article.text.value",:flat="true",:rows="20",label="输入内容",:clearable="false")
+                //-   div.preview
+                //-     v-select(attach label="预览" :items="preview",v-model="type")
+                //-     div(v-if="type === 'preview'" v-html="article.html.value")
+                //-     v-textarea(v-else :value="article.html.value",auto-grow box readonly)
               span 共计:
               v-chip(small,color="primary",text-color="white") 字数 {{wordcount}}
               span 其中包含:
@@ -201,6 +210,17 @@ const CREATE = gql`
   },
 })
 export default class Operating extends Vue {
+  public type: string = 'preview';
+  public preview: any = [
+    {
+      text: 'Preview',
+      value: 'preview',
+    },
+    {
+      text: 'HTML Source',
+      value: 'htmlSource',
+    },
+  ];
   public leetree: any = [];
   public allCategory: any;
   public allCategoryByTree: any;

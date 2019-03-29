@@ -44,6 +44,17 @@ const routes: RouteConfig[] = [
         name: '修改文章',
         component: () => import('@/components/article/edit.vue'),
       },
+      {
+        path: '/tags',
+        name: '分类',
+        component: () => import('@/components/tags/index.vue'),
+      },
+
+      {
+        path: '/annex',
+        name: '分类',
+        component: () => import('@/components/annex/index.vue'),
+      },
     ],
   },
 ];
