@@ -37,7 +37,6 @@
               td {{ props.item.destination }}
               td {{ props.item.path }}
               td {{ props.item.createdAt }}
-              td {{ props.item.updatedAt }}
                   
 </template>
 <script lang="ts">
@@ -64,7 +63,6 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
               destination
               path
               createdAt
-              updatedAt
             }
           }
         `,
@@ -117,8 +115,7 @@ export default class Annex extends Vue {
     { text: '编码', value: 'encoding' },
     { text: '目录', value: 'destination' },
     { text: '路径', value: 'path' },
-    { text: '创建时间', value: 'createdAt' },
-    { text: '最后修改时间', value: 'updatedAt' },
+    { text: '上传时间', value: 'createdAt' },
   ];
   @Watch('selected')
   public onSelectedChanged(val: object, oldVal: any) {
