@@ -29,7 +29,7 @@
               td
                 v-checkbox(v-model="props.selected",primary,hide-details)
               td {{ props.item.id }}
-              td {{ props.item.size }}
+              td {{ props.item.size }}/Bytes
               td {{ props.item.author.name }}
               td {{ props.item.mimetype }}
               td {{ props.item.filename }}

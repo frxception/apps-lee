@@ -18,7 +18,7 @@
                         v-list-tile-action
                             v-icon {{ item.icon }}
                         v-list-tile-title {{ item.title }}
-        v-toolbar(app,dark,:clipped-left='clipped',color="blue")
+        v-toolbar(app,dark,:clipped-left='clipped',color="blue",light)
             v-toolbar-side-icon(@click.stop='drawer = !drawer')
             v-btn(icon='', @click.stop='miniVariant = !miniVariant')
                 v-icon(v-html="miniVariant ? 'chevron_right' : 'chevron_left'")
