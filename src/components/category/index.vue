@@ -56,85 +56,85 @@
 
 </template>
 <script lang="ts">
-    import gql from "graphql-tag";
-    import {Vue, Component, Watch} from "vue-property-decorator";
+import gql from 'graphql-tag';
+import {Vue, Component, Watch} from 'vue-property-decorator';
 
-    @Component({
-        components: {},
-        apollo: {
-            allCategory() {
-                return {
-                    query: gql`
-          query {
-            allCategory {
-              id
-              label
-              slug
-              desc
-              count
-              order
-              createdAt
-              updatedAt
-            }
-          }
-        `,
-                    result(result: object) {
-                        /* tslint:disable:no-console */
-                        console.log(
-                            "%cINFO",
-                            "background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;",
-                            `Message: [Category result]: ${JSON.stringify(result)}`,
-                        );
-                    },
-                    fetchPolicy: "cache-and-network",
-                };
-            },
+@Component({
+    components: {},
+    apollo: {
+        allCategory() {
+            return {
+                query: gql`
+      query {
+        allCategory {
+          id
+          label
+          slug
+          desc
+          count
+          order
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+                result(result: object) {
+                    /* tslint:disable:no-console */
+                    console.log(
+                        '%cINFO',
+                        'background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
+                        `Message: [Category result]: ${JSON.stringify(result)}`,
+                    );
+                },
+                fetchPolicy: 'cache-and-network',
+            };
         },
-    })
-    export default class Category extends Vue {
-        get pages() {
-            if (
-                this.pagination.rowsPerPage === undefined ||
-                this.pagination.totalItems === undefined
-            ) {
-                return 0;
-            }
-            return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
+    },
+})
+export default class Category extends Vue {
+    get pages() {
+        if (
+            this.pagination.rowsPerPage === undefined ||
+            this.pagination.totalItems === undefined
+        ) {
+            return 0;
         }
-        public loading: boolean = false;
-        public pagination: any = {
-            descending: false,
-            page: 1,
-            rowsPerPage: 10,
-            sortBy: "id",
-            totalItems: 0,
-        };
-        public selected: object = [];
-        public selectedcount: number = 0;
-        public allCategory: any;
-        public search: string = "";
-        public dialog: boolean = false;
-        private headers: object = [
-            {
-                text: "ID",
-                align: "left",
-                value: "id",
-            },
-            {text: "分类名", value: "label"},
-            {text: "别名", value: "slug"},
-            {text: "描述", value: "desc"},
-            {text: "子分类数量", value: "count"},
-            {text: "排序", value: "order"},
-            {text: "创建时间", value: "createdAt"},
-            {text: "最后修改时间", value: "updatedAt"},
-            {text: "操作", value: "", align: "center"},
-        ];
-
-        @Watch("selected")
-        public onSelectedChanged(val: object, oldVal: any) {
-            this.selectedcount = Object.keys(val).length;
-        }
+        return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
     }
+    public loading: boolean = false;
+    public pagination: any = {
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        sortBy: 'id',
+        totalItems: 0,
+    };
+    public selected: object = [];
+    public selectedcount: number = 0;
+    public allCategory: any;
+    public search: string = '';
+    public dialog: boolean = false;
+    private headers: object = [
+        {
+            text: 'ID',
+            align: 'left',
+            value: 'id',
+        },
+        {text: '分类名', value: 'label'},
+        {text: '别名', value: 'slug'},
+        {text: '描述', value: 'desc'},
+        {text: '子分类数量', value: 'count'},
+        {text: '排序', value: 'order'},
+        {text: '创建时间', value: 'createdAt'},
+        {text: '最后修改时间', value: 'updatedAt'},
+        {text: '操作', value: '', align: 'center'},
+    ];
+
+    @Watch('selected')
+    public onSelectedChanged(val: object, oldVal: any) {
+        this.selectedcount = Object.keys(val).length;
+    }
+}
 </script>
 
 <style lang="stylus" scoped>

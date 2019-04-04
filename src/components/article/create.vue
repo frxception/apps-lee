@@ -410,7 +410,7 @@ export default class Operating extends Vue {
 
 <style lang="stylus" scoped>
 .markdown
-  background-color: #fff
+  // background-color: #fff
   border-radius: 4px
   .toolbars
     // box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);

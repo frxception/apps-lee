@@ -1,8 +1,8 @@
-import {InMemoryCache} from 'apollo-cache-inmemory';
-import {ApolloClient} from 'apollo-client';
-import {ApolloLink} from 'apollo-link';
-import {onError} from 'apollo-link-error';
-import {HttpLink} from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { ApolloLink } from 'apollo-link';
+import { onError } from 'apollo-link-error';
+import { HttpLink } from 'apollo-link-http';
 import Vue from 'vue';
 import VueApollo from 'vue-apollo';
 import router from './router';
@@ -23,11 +23,12 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const httpLink = new HttpLink({
-    uri: 'http://0.0.0.0:3001/api/graphql',
+    uri: 'http://172.17.3.68:3001/api/graphql',
     // uri: 'http://localhost:3000/api/graphql',
 });
 
-const errorLink = onError(({graphQLErrors, networkError, operation, forward}) => {
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
+    /* tslint:disable:no-console */
     console.log(
         '%cError',
         'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',

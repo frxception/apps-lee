@@ -19,8 +19,9 @@
                 v-btn(flat small) 删除选中数据
               v-btn(flat small) 全部删除
     v-card(flat)
-        v-btn(fab absolute small top right dark color="info")
-          v-icon add
+        upload-btn(title='上传附件' name="file" flat color small :fileChangedCallback="upload")
+          template(slot='icon-left')
+            v-icon(left='' ) add
         v-data-table(v-model="selected",:no-results-text="`没有找到和 ' ${search} ' 相关的数据哦`",
         no-data-text="还没有数据哦,快去添加条吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
         :headers="headers",:items="allAnnex",:search="search",select-all,rows-per-page-text="每页行数")
@@ -41,10 +42,14 @@
 </template>
 <script lang="ts">
 import gql from 'graphql-tag';
+import UploadButton from 'vuetify-upload-button';
 import { Vue, Component, Watch } from 'vue-property-decorator';
+import axios from 'axios';
 
 @Component({
-  components: {},
+  components: {
+    'upload-btn': UploadButton,
+  },
   apollo: {
     allAnnex() {
       return {
@@ -120,6 +125,25 @@ export default class Annex extends Vue {
   @Watch('selected')
   public onSelectedChanged(val: object, oldVal: any) {
     this.selectedcount = Object.keys(val).length;
+  }
+
+  public upload(file: any) {
+    console.info(file);
+    const formData = new FormData();
+    formData.append('file', file);
+    axios
+      .post('http://172.17.3.68:3001/annex', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${this.$store.state.token}`,
+        },
+      })
+      .then((data) => {
+        this.allAnnex.push(data.data);
+      })
+      .catch((error) => {
+        this.$toast('上传附件失败');
+      });
   }
 }
 </script>

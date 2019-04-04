@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import Router, {Route, RouteConfig} from 'vue-router';
+import Router, { Route, RouteConfig } from 'vue-router';
 import nprogress from 'nprogress';
 import store from './store';
 
 Vue.use(Router);
 
-nprogress.configure({showSpinner: false});
+nprogress.configure({ showSpinner: false });
 
 const routes: RouteConfig[] = [
     {
@@ -17,7 +17,7 @@ const routes: RouteConfig[] = [
         path: '/',
         redirect: 'dashboard',
         component: () => import('@/views/back.vue'),
-        meta: {auth: true},
+        meta: { auth: true },
         children: [
             {
                 path: '/dashboard',
@@ -52,7 +52,7 @@ const routes: RouteConfig[] = [
 
             {
                 path: '/annex',
-                name: '分类',
+                name: '附件',
                 component: () => import('@/components/annex/index.vue'),
             },
         ],
