@@ -23,7 +23,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const httpLink = new HttpLink({
-    uri: 'http://172.17.3.68:3001/api/graphql',
+    uri: 'http://127.0.0.1:3001/api/graphql',
     // uri: 'http://localhost:3000/api/graphql',
 });
 

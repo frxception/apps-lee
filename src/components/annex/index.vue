@@ -132,7 +132,7 @@ export default class Annex extends Vue {
     const formData = new FormData();
     formData.append('file', file);
     axios
-      .post('http://172.17.3.68:3001/annex', formData, {
+      .post('http://127.0.0.1:3001/annex', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${this.$store.state.token}`,
