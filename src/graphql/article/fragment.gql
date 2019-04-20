@@ -1,0 +1,28 @@
+fragment fields on Article {
+  id
+  title
+  slug
+  text
+  html
+  order
+  category {
+    label
+  }
+  author {
+    name
+  }
+  tags {
+    label
+  }
+  template
+  type
+  status
+  publish
+  password
+  isTop
+  allowComment
+  allowPing
+  createdAt
+  updatedAt
+  dataVersion
+}

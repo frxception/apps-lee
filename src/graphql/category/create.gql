@@ -1,0 +1,6 @@
+#import "./fragment.gql"
+mutation($category: CategoryInput) {
+  createCategory(category: $category) {
+    ...fields
+  }
+}

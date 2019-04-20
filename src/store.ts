@@ -1,24 +1,41 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, { Store, ActionTree, MutationTree, GetterTree } from 'vuex';
 
 Vue.use(Vuex);
 
-export const LOGIN = 'LOGIN';
+export interface RootStateTypes {
+  token: string;
+}
 
-export default new Vuex.Store({
-    state: {
-        token: window.sessionStorage.getItem('token'),
-    },
-    mutations: {
-        [LOGIN]: (state, data) => {
-            // 更改token的值
-            state.token = data;
-            window.sessionStorage.setItem('token', data);
-        },
-    },
-    actions: {
-        token({commit}, data) {
-            commit(LOGIN, data);
-        },
-    },
+const actions: ActionTree<RootStateTypes, {}> = {
+  SET_TOKEN({ commit }, data: string) {
+    commit('SET_TOKEN', data);
+  },
+};
+
+const state: RootStateTypes = {
+  token: localStorage.getItem('token') as any,
+};
+
+const mutations: MutationTree<RootStateTypes> = {
+  // tslint:disable-next-line:no-shadowed-variable
+  SET_TOKEN(state: RootStateTypes, data: string) {
+    state.token = data;
+    localStorage.setItem('token', state.token);
+  },
+};
+
+const getters: GetterTree<RootStateTypes, any> = {
+  // tslint:disable-next-line:no-shadowed-variable
+  token: (state: RootStateTypes) => state.token,
+};
+
+const stroe: Store<any> = new Vuex.Store({
+  actions,
+  mutations,
+  getters,
+  state,
+  modules: {},
 });
+
+export default stroe;

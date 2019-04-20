@@ -1,0 +1,12 @@
+fragment fields on Category {
+  id
+  label
+  slug
+  desc
+  count
+  order
+  parent
+  createdAt
+  updatedAt
+  # children
+}

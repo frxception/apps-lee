@@ -1,6 +1,6 @@
 {
-  "name": "lee-admin",
-  "short_name": "lee-admin",
+  "name": "vue-app",
+  "short_name": "vue-app",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

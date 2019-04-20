@@ -1,93 +1,89 @@
 import Vue from 'vue';
-import Router, { Route, RouteConfig } from 'vue-router';
-import nprogress from 'nprogress';
-import store from './store';
+import Router, { RouteConfig, Route } from 'vue-router';
+import NProgress from 'nprogress';
+import stroe from './store';
 
 Vue.use(Router);
-
-nprogress.configure({ showSpinner: false });
-
-const routes: RouteConfig[] = [
-    {
-        path: '/login',
-        name: '登录',
-        component: () => import('@/views/login.vue'),
-    },
-    {
-        path: '/',
-        redirect: 'dashboard',
-        component: () => import('@/views/back.vue'),
-        meta: { auth: true },
-        children: [
-            {
-                path: '/dashboard',
-                name: '首页',
-                component: () => import('@/views/dashboard.vue'),
-            },
-            {
-                path: '/category',
-                name: '分类',
-                component: () => import('@/components/category/index.vue'),
-            },
-            {
-                path: '/article',
-                name: '文章',
-                component: () => import('@/components/article/index.vue'),
-            },
-            {
-                path: '/article/create',
-                name: '创建文章',
-                component: () => import('@/components/article/create.vue'),
-            },
-            {
-                path: '/article/edit/:id',
-                name: '修改文章',
-                component: () => import('@/components/article/edit.vue'),
-            },
-            {
-                path: '/tags',
-                name: '分类',
-                component: () => import('@/components/tags/index.vue'),
-            },
-
-            {
-                path: '/annex',
-                name: '附件',
-                component: () => import('@/components/annex/index.vue'),
-            },
-        ],
-    },
-];
-
-const router: Router = new Router({
-    mode: 'history',
-    routes,
+/* tslint:disable:max-line-length */
+NProgress.configure({
+  showSpinner: true,
 });
 
+const routes: RouteConfig[] = [
+  {
+    path: '/login',
+    name: '登录',
+    component: () => import('@/views/login.vue'),
+    meta: {
+      title: '登录',
+    },
+  },
+  {
+    path: '',
+    redirect: 'dashboard',
+    name: '/',
+    component: () => import('@/views/layout.vue'),
+    meta: { auth: true, title: '首页' },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('@/components/dashboard/index.vue'),
+        meta: {
+          title: '首页',
+        },
+      },
+      {
+        path: 'category',
+        name: 'category',
+        component: () => import('@/components/category/index.vue'),
+        meta: {
+          title: '分类',
+        },
+      },
+      {
+        path: 'article',
+        name: 'article',
+        component: () => import('@/components/article/index.vue'),
+        meta: {
+          title: '文章',
+        },
+      },
+    ],
+  },
+];
+const router: Router = new Router({
+  mode: 'history',
+  routes,
+});
+
+const title = 'Lee Blog';
+
 router.beforeEach((to: Route, from: Route, next: any) => {
-    nprogress.start();
-    const auth = to.matched.some((record) => record.meta.auth);
-    const token = store.state.token;
-    if (auth) {
-        if (token) {
-            next();
-        } else {
-            next({
-                path: '/login',
-                query: {
-                    redirect: to.fullPath,
-                },
-            });
-        }
+  NProgress.start();
+  document.title = `${to.meta.title} - ${title}`;
+  const auth = to.matched.some((record) => record.meta.auth);
+  const token = stroe.state.token;
+  if (auth) {
+    if (token) {
+      next();
     } else {
-        next();
-        nprogress.done();
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath,
+        },
+      });
     }
-    nprogress.done();
+  } else {
+    next();
+    NProgress.done();
+  }
+  NProgress.done();
 });
 
 router.afterEach(() => {
-    nprogress.done();
+  NProgress.done();
 });
 
 export default router;

@@ -1,24 +1,9 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-import 'vuetify/src/stylus/main.styl'
-import zhHans from 'vuetify/src/locale/zh-Hans'
-import { VuetifyToast } from '@/components/widget';
-Vue.use(VuetifyToast, {
-  x: 'right',
-  y: 'top',
-  icon: 'info',
-  timeout: 3000,
-  dismissable: true,
-  autoHeight: false,
-  multiLine: false,
-  vertical: false,
-  shorts: {
-    custom: {
-      color: 'purple',
-    },
-  },
-  property: '$toast',
-});
+import Vue from 'vue';
+import Vuetify from 'vuetify';
+import 'vuetify/src/stylus/app.styl';
+import zhHans from 'vuetify/src/locale/zh-Hans';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 Vue.use(Vuetify, {
   theme: {
     primary: '#ee44aa',
@@ -37,4 +22,4 @@ Vue.use(Vuetify, {
     locales: { zhHans },
     current: 'zh-Hans',
   },
-})
+});
