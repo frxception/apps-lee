@@ -1,0 +1,10 @@
+query{
+  allTags{
+    id
+    label
+    colro
+    hot
+    createdAt
+    updatedAt
+  }
+}

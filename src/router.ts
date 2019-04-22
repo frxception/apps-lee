@@ -12,7 +12,6 @@ NProgress.configure({
 const routes: RouteConfig[] = [
   {
     path: '/login',
-    name: '登录',
     component: () => import('@/views/login.vue'),
     meta: {
       title: '登录',
@@ -21,13 +20,11 @@ const routes: RouteConfig[] = [
   {
     path: '',
     redirect: 'dashboard',
-    name: '/',
     component: () => import('@/views/layout.vue'),
     meta: { auth: true, title: '首页' },
     children: [
       {
         path: 'dashboard',
-        name: 'dashboard',
         component: () => import('@/components/dashboard/index.vue'),
         meta: {
           title: '首页',
@@ -35,7 +32,6 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'category',
-        name: 'category',
         component: () => import('@/components/category/index.vue'),
         meta: {
           title: '分类',
@@ -43,10 +39,16 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'article',
-        name: 'article',
         component: () => import('@/components/article/index.vue'),
         meta: {
-          title: '文章',
+          title: '管理文章',
+        },
+      },
+      {
+        path: 'article/create',
+        component: () => import('@/components/article/create.vue'),
+        meta: {
+          title: '创建文章',
         },
       },
     ],

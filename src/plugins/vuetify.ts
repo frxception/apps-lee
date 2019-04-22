@@ -18,8 +18,8 @@ Vue.use(Vuetify, {
     customProperties: true,
   },
   iconfont: 'md',
-  lang: {
-    locales: { zhHans },
-    current: 'zh-Hans',
-  },
+  // lang: {
+  //   locales: { zhHans },
+  //   current: 'zh-Hans',
+  // },
 });

@@ -1,0 +1,6 @@
+#import "./fragment.gql"
+mutation($article: ArticleInput) {
+    createArticle(article: $article) {
+      ...fields
+    }
+}
