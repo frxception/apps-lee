@@ -18,37 +18,58 @@ const routes: RouteConfig[] = [
     },
   },
   {
-    path: '',
+    path: '/',
     redirect: 'dashboard',
     component: () => import('@/views/layout.vue'),
     meta: { auth: true, title: '首页' },
     children: [
       {
-        path: 'dashboard',
+        path: '/dashboard',
         component: () => import('@/components/dashboard/index.vue'),
         meta: {
           title: '首页',
         },
       },
       {
-        path: 'category',
+        path: '/category',
         component: () => import('@/components/category/index.vue'),
         meta: {
           title: '分类',
         },
       },
       {
-        path: 'article',
+        path: '/article',
         component: () => import('@/components/article/index.vue'),
         meta: {
           title: '管理文章',
         },
       },
       {
-        path: 'article/create',
+        path: '/article/create',
         component: () => import('@/components/article/create.vue'),
         meta: {
           title: '创建文章',
+        },
+      },
+      {
+        path: '/article/edit/:id',
+        component: () => import('@/components/article/create.vue'),
+        meta: {
+          title: '编辑文章',
+        },
+      },
+      {
+        path: '/tags',
+        component: () => import('@/components/tags/index.vue'),
+        meta: {
+          title: 'Tags',
+        },
+      },
+      {
+        path: '/annex',
+        component: () => import('@/components/annex/index.vue'),
+        meta: {
+          title: '附件',
         },
       },
     ],

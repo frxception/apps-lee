@@ -76,7 +76,7 @@ v-form(v-model="valid",ref="form",lazy-validation)
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import twemoji from 'twemoji';
-import { ALLTAGS } from "@/graphql/tags";
+import { ALLTAGS } from '@/graphql/tags';
 import { ALLCATEGORY } from '@/graphql/category';
 import { CREATE } from '@/graphql/article';
 import '@/assets/font/iconfont.css';
@@ -98,6 +98,8 @@ import '@/assets/font/iconfont.css';
   },
 })
 export default class ArticleCreate extends Vue {
+  // 查找  tags
+  public search: any = null;
   // 预览类型
   private type: string = 'preview';
   private preview: object = [
@@ -123,9 +125,7 @@ export default class ArticleCreate extends Vue {
   // 输入动画
   private textarealoading: boolean = false;
   // 文章是否加密
-  private password: boolean = false
-  // 查找  tags
-  public search: any = null;
+  private password: boolean = false;
   // 内容状态
   private publicstate: any = [
     {
@@ -146,7 +146,7 @@ export default class ArticleCreate extends Vue {
     },
   ];
   // 是否置顶
-  private isTop: boolean = true
+  private isTop: boolean = true;
   // 提交内容
   private article: any = {
     // 标题
@@ -250,7 +250,6 @@ export default class ArticleCreate extends Vue {
   private async release(): Promise<void> {
     this.loading = true;
     if ((this.$refs.form as any).validate()) {
-      console.info(this.article)
       try {
         const result = await this.$apollo.mutate({
           mutation: CREATE,
@@ -271,11 +270,10 @@ export default class ArticleCreate extends Vue {
             },
           },
         });
-        console.info(result)
         // (this.$refs.form as any).reset();
         this.$router.replace('/article');
       } catch (error) {
-        console.info(error)
+        // console.info(error);
       }
     }
     this.loading = false;

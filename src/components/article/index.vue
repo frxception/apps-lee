@@ -15,6 +15,8 @@ div
             // v-select(label="所有标签")
             v-select(label="最新发布")
             v-text-field(v-model='search', append-icon='search', label='search', single-line='')
+        v-btn(absolute, dark, fab, small,right, color='pink',@click=`$router.push('/article/create')`)
+            v-icon add
         v-data-table(item-key="id",v-model='selected',select-all,:headers='headers',:items="allArticle",:search='search')
             template(v-slot:items='props')
                 //  @click='props.selected = !props.selected'
@@ -56,10 +58,10 @@ div
                     //       span(v-on='on') {{ props.item.updatedAt | date }}
                     //     span {{ props.item.updatedAt | formatdate }}
                     td.text-xs-center
-                        v-btn(color='success',small,flat,round) 编辑
+                        v-btn(color='success',small,flat,round,@click=`$router.push("/article/edit/2")`) 编辑
                         v-btn(v-if='props.item.status',color='error',icon,small,flat,round) 移到草稿
                         v-btn(v-else,small,flat,round) 快速发布
-                        v-btn(color='error',small,flat,round) 删除
+                        v-btn(color='error',small,flat,round,@click='remove(props.item)') 删除
     v-navigation-drawer(v-model='drawer',temporary,right,hide-overlay,fixed)
         v-toolbar(color='blue', dark='')
             v-toolbar-title(v-if='one')
@@ -169,6 +171,10 @@ export default class Article extends Vue {
       this.one = Object.values(val)[0];
       this.drawer = !this.drawer;
     }
+  }
+
+  private remove() {
+    return;
   }
 }
 </script>

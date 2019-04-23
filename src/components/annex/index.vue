@@ -19,43 +19,72 @@
                 v-btn(flat small) 删除选中数据
               v-btn(flat small) 全部删除
     v-card(flat)
-        v-btn(fab absolute small top right dark color="info")
-          v-icon add
+        upload-btn(title='上传附件' name="file" flat color small :fileChangedCallback="upload")
+          template(slot='icon-left')
+            v-icon(left='' ) add
         v-data-table(v-model="selected",:no-results-text="`没有找到和 ' ${search} ' 相关的数据哦`",
         no-data-text="还没有数据哦,快去添加条吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
-        :headers="headers",:items="allTags",:search="search",select-all,rows-per-page-text="每页行数")
+        :headers="headers",:items="allAnnex",:search="search",select-all,rows-per-page-text="每页行数")
           template(v-slot:items="props")
               td
                 v-checkbox(v-model="props.selected",primary,hide-details)
               td {{ props.item.id }}
-              td {{ props.item.label }}
-              td {{ props.item.colro }}
-              td {{ props.item.hot }}
+              td {{ props.item.size }}/Bytes
+              td {{ props.item.author.name }}
+              td {{ props.item.mimetype }}
+              td {{ props.item.filename }}
+              td {{ props.item.originalname }}
+              td {{ props.item.encoding }}
+              td {{ props.item.destination }}
+              td {{ props.item.path }}
               td {{ props.item.createdAt }}
-              td {{ props.item.updatedAt }}
-              td.justify-center.layout.px-0
-                v-btn(small flat icon color="info")
-                  v-icon(small) edit
-                v-btn(small flat icon color="error")
-                  v-icon(small) delete
                   
 </template>
 <script lang="ts">
 import gql from 'graphql-tag';
-import { ALLTAGS } from '@/graphql/tags';
+import UploadButton from 'vuetify-upload-button';
 import { Vue, Component, Watch } from 'vue-property-decorator';
+import axios from 'axios';
 
 @Component({
-  components: {},
+  components: {
+    'upload-btn': UploadButton,
+  },
   apollo: {
-    allTags() {
+    allAnnex() {
       return {
-        query: ALLTAGS,
+        query: gql`
+          query {
+            allAnnex {
+              id
+              author {
+                name
+              }
+              size
+              mimetype
+              filename
+              originalname
+              encoding
+              destination
+              path
+              createdAt
+            }
+          }
+        `,
+        result(result: object) {
+          /* tslint:disable:no-console */
+          console.log(
+            '%cINFO',
+            'background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
+            `Message: [Category result]: ${JSON.stringify(result)}`,
+          );
+        },
+        fetchPolicy: 'cache-and-network',
       };
     },
   },
 })
-export default class Tags extends Vue {
+export default class Annex extends Vue {
   get pages() {
     if (
       this.pagination.rowsPerPage === undefined ||
@@ -75,7 +104,7 @@ export default class Tags extends Vue {
   };
   public selected: object = [];
   public selectedcount: number = 0;
-  public allTags: any;
+  public allAnnex: any;
   public search: string = '';
   private headers: object = [
     {
@@ -83,15 +112,38 @@ export default class Tags extends Vue {
       align: 'left',
       value: 'id',
     },
-    { text: '分类名', value: 'label' },
-    { text: '颜色', value: 'colro' },
-    { text: '热度', value: 'hot' },
-    { text: '创建时间', value: 'createdAt' },
-    { text: '最后修改时间', value: 'updatedAt' },
+    { text: '大小', value: 'size' },
+    { text: '作者', value: 'author ' },
+    { text: 'MIME类型', value: 'mimetype' },
+    { text: '文件名', value: 'filename' },
+    { text: '原文件名', value: 'originalname' },
+    { text: '编码', value: 'encoding' },
+    { text: '目录', value: 'destination' },
+    { text: '路径', value: 'path' },
+    { text: '上传时间', value: 'createdAt' },
   ];
   @Watch('selected')
   public onSelectedChanged(val: object, oldVal: any) {
     this.selectedcount = Object.keys(val).length;
+  }
+
+  public upload(file: any) {
+    console.info(file);
+    const formData = new FormData();
+    formData.append('file', file);
+    axios
+      .post('http://127.0.0.1:3001/annex', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${this.$store.state.token}`,
+        },
+      })
+      .then((data: any) => {
+        this.allAnnex.push(data.data);
+      })
+      .catch((error: any) => {
+        // this.$toast('上传附件失败');
+      });
   }
 }
 </script>

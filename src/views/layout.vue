@@ -57,7 +57,7 @@ export default class Layout extends Vue {
       icon: 'home',
       color: 'purple',
       title: '首页',
-      path: 'dashboard',
+      path: '/dashboard',
     },
     // {
     //   divider: true,
@@ -66,19 +66,19 @@ export default class Layout extends Vue {
       icon: 'bookmark',
       color: 'orange',
       title: '分类',
-      path: 'category',
+      path: '/category',
     },
     {
       icon: 'local_offer',
       color: 'red',
       title: '标签',
-      path: 'tags',
+      path: '/tags',
     },
     {
       icon: 'drafts',
       color: 'purple',
       title: '文章',
-      path: 'article',
+      path: '/article',
     },
     // {
     //   icon: 'pages',
@@ -95,7 +95,7 @@ export default class Layout extends Vue {
       icon: 'folder',
       color: 'pink',
       title: '附件',
-      path: 'annex',
+      path: '/annex',
     },
     // {
     //   divider: true,
