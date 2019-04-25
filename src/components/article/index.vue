@@ -28,8 +28,8 @@ div
                     td {{ props.item.title }}
                     // td {{ props.item.slug }}
                     td {{ props.item.category.label }}
-                    td 
-                        v-subheader(v-for='item in props.item.tags',:key='item.label') {{item.label}}
+                    //- td 
+                    //-     v-subheader(v-for='item in props.item.tags',:key='item.label') {{item.label}}
                     td {{ props.item.author.name }}
                     td
                         span(v-if='props.item.status') 发布
@@ -151,7 +151,7 @@ export default class Article extends Vue {
     { text: '标题', value: 'label' },
     // { text: '别名', value: 'slug' },
     { text: '分类', value: 'category' },
-    { text: 'Tags', value: 'tags' },
+    // { text: 'Tags', value: 'tags' },
     { text: '作者', value: 'count' },
     // { text: '排序', value: 'order' },
     // { text: '模板', value: 'template' },

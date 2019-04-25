@@ -100,6 +100,10 @@ import '@/assets/font/iconfont.css';
 export default class ArticleCreate extends Vue {
   // 查找  tags
   public search: any = null;
+  // 封面
+  public cover?: string;
+  // 摘要
+  public summary?: string;
   // 预览类型
   private type: string = 'preview';
   private preview: object = [
@@ -218,6 +222,11 @@ export default class ArticleCreate extends Vue {
       size: '16x16',
       base: 'http://twemoji.maxcdn.com/',
     });
+    // this.summary = this.article.html.value.replace(/<[^>]*>|/g, '');
+    this.summary = this.article.html.value
+      .replace(/<[^>]*>|/g, '')
+      .replace(/\s+/g, '')
+      .slice(0, 80);
     // 行数
     // this.lenth = this.article.text.value.split('\n').length;
     // 计算所有字符
@@ -260,6 +269,8 @@ export default class ArticleCreate extends Vue {
               category: await this.article.category.value,
               text: await this.article.text.value,
               html: await this.article.html.value,
+              summary: await this.summary,
+              cover: '',
               type: await this.article.type.value,
               status: await this.article.status.value,
               publish: await this.article.publish.value,
