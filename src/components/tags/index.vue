@@ -1,59 +1,47 @@
 <template lang="pug">
-  div
-    v-card(flat)
-      v-card-text
-        v-layout(row,wrap)
-            v-flex(d-flex,lg2,sm6,xs12)
-            v-flex(d-flex,lg6,sm6,xs12)
-              v-text-field(v-model="search",prepend-icon="search",label="检索信息Search",type="text")
-            v-flex(d-flex,lg2,sm6,xs12)
-              v-btn(round dark color="info") 查找
-            v-flex(d-flex,lg2,sm6,xs12)
-      v-card-actions
-          v-layout(align-center justify-center)
-            v-flex(xs12 sm8 md4)
-              v-btn(flat small) 全部删除
-              v-badge(overlap)
-                template(v-slot:badge)
-                  span {{selectedcount}}
-                v-btn(flat small) 删除选中数据
-              v-btn(flat small) 全部删除
-    v-card(flat)
-        v-btn(fab absolute small top right dark color="info")
-          v-icon add
-        v-data-table(v-model="selected",:no-results-text="`没有找到和 ' ${search} ' 相关的数据哦`",
-        no-data-text="还没有数据哦,快去添加条吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
-        :headers="headers",:items="allTags",:search="search",select-all,rows-per-page-text="每页行数")
-          template(v-slot:items="props")
-              td
-                v-checkbox(v-model="props.selected",primary,hide-details)
-              td {{ props.item.id }}
-              td {{ props.item.label }}
-              td {{ props.item.colro }}
-              td {{ props.item.hot }}
-              td {{ props.item.createdAt }}
-              td {{ props.item.updatedAt }}
-              td.justify-center.layout.px-0
-                v-btn(small flat icon color="info")
-                  v-icon(small) edit
-                v-btn(small flat icon color="error")
-                  v-icon(small) delete
-                  
+v-card(flat)
+    v-layout(row,wrap)
+        v-flex(xs12 sm4)
+            v-card-text
+                v-form(ref='form',v-model='valid', lazy-validation)
+                    v-text-field(label='Tags',v-model="tags.label.value",:rules="tags.label.rule")
+            v-card-actions
+                v-spacer
+                v-btn(:loading="loading",:disabled="!valid",color='primary', flat, @click='operating()') 新增
+        v-flex(xs12 sm8)
+            v-data-table(v-model="selected",:no-results-text="`没有找到和 ' ${search} ' 相关的数据哦`",
+            no-data-text="还没有数据哦,快去添加条吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
+            :headers="headers",:items="allTags",:search="search",select-all,rows-per-page-text="每页行数")
+                template(v-slot:items="props")
+                    td
+                        v-checkbox(v-model="props.selected",primary,hide-details)
+                    td {{ props.item.id }}
+                    td {{ props.item.label }}
+                    td {{ props.item.colro }}
+                    td {{ props.item.hot }}
+                    td {{ props.item.createdAt }}
+                    td {{ props.item.updatedAt }}
+                    td.justify-center.layout.px-0
+                        v-btn(small flat icon color="info")
+                            v-icon(small) edit
+                        v-btn(small flat icon color="error")
+                            v-icon(small) delete            
 </template>
 <script lang="ts">
-import gql from 'graphql-tag';
-import { ALLTAGS } from '@/graphql/tags';
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import gql from "graphql-tag";
+import { ALLTAGS, CREATE } from "@/graphql/tags";
+import { Vue, Component, Watch } from "vue-property-decorator";
+import NProgress from "nprogress";
 
 @Component({
   components: {},
   apollo: {
     allTags() {
       return {
-        query: ALLTAGS,
+        query: ALLTAGS
       };
-    },
-  },
+    }
+  }
 })
 export default class Tags extends Vue {
   get pages() {
@@ -65,33 +53,57 @@ export default class Tags extends Vue {
     }
     return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
   }
+  // 选中数据
+  private selected: any = [];
+  // 验证
+  private valid: boolean = true;
+  // 加载
   public loading: boolean = false;
   public pagination: any = {
     descending: false,
     page: 1,
     rowsPerPage: 10,
-    sortBy: 'id',
-    totalItems: 0,
+    sortBy: "id",
+    totalItems: 0
   };
-  public selected: object = [];
-  public selectedcount: number = 0;
   public allTags: any;
-  public search: string = '';
+  public search: string = "";
   private headers: object = [
     {
-      text: 'ID',
-      align: 'left',
-      value: 'id',
+      text: "ID",
+      align: "left",
+      value: "id"
     },
-    { text: '分类名', value: 'label' },
-    { text: '颜色', value: 'colro' },
-    { text: '热度', value: 'hot' },
-    { text: '创建时间', value: 'createdAt' },
-    { text: '最后修改时间', value: 'updatedAt' },
+    { text: "分类名", value: "label" },
+    { text: "颜色", value: "colro" },
+    { text: "热度", value: "hot" },
+    { text: "创建时间", value: "createdAt" },
+    { text: "最后修改时间", value: "updatedAt" }
   ];
-  @Watch('selected')
-  public onSelectedChanged(val: object, oldVal: any) {
-    this.selectedcount = Object.keys(val).length;
+  private tags: any = {
+    label: {
+      value: "",
+      rule: [(v: string) => !!v || "tag必须填写哦!"]
+    }
+  };
+  private async operating(): Promise<void> {
+    if ((this.$refs.form as any).validate()) {
+      try {
+        NProgress.start();
+        const result = await this.$apollo.mutate({
+          mutation: CREATE,
+          variables: {
+            tags: {
+              label: await this.tags.label.value
+            }
+          }
+        });
+        this.allTags.push(result.data.createTags);
+        NProgress.done();
+      } catch (error) {
+        NProgress.done();
+      }
+    }
   }
 }
 </script>

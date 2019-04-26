@@ -1,0 +1,10 @@
+mutation($tags:TagsInput){
+  createTags(tags: $tags){
+    id
+    label
+    colro
+    hot
+    createdAt
+    updatedAt
+  }
+}
