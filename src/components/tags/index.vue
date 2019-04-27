@@ -28,20 +28,20 @@ v-card(flat)
                             v-icon(small) delete            
 </template>
 <script lang="ts">
-import gql from "graphql-tag";
-import { ALLTAGS, CREATE } from "@/graphql/tags";
-import { Vue, Component, Watch } from "vue-property-decorator";
-import NProgress from "nprogress";
+import gql from 'graphql-tag';
+import { ALLTAGS, CREATE } from '@/graphql/tags';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import NProgress from 'nprogress';
 
 @Component({
   components: {},
   apollo: {
     allTags() {
       return {
-        query: ALLTAGS
+        query: ALLTAGS,
       };
-    }
-  }
+    },
+  },
 })
 export default class Tags extends Vue {
   get pages() {
@@ -53,38 +53,38 @@ export default class Tags extends Vue {
     }
     return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
   }
-  // 选中数据
-  private selected: any = [];
-  // 验证
-  private valid: boolean = true;
   // 加载
   public loading: boolean = false;
   public pagination: any = {
     descending: false,
     page: 1,
     rowsPerPage: 10,
-    sortBy: "id",
-    totalItems: 0
+    sortBy: 'id',
+    totalItems: 0,
   };
   public allTags: any;
-  public search: string = "";
+  public search: string = '';
+  // 选中数据
+  private selected: any = [];
+  // 验证
+  private valid: boolean = true;
   private headers: object = [
     {
-      text: "ID",
-      align: "left",
-      value: "id"
+      text: 'ID',
+      align: 'left',
+      value: 'id',
     },
-    { text: "分类名", value: "label" },
-    { text: "颜色", value: "colro" },
-    { text: "热度", value: "hot" },
-    { text: "创建时间", value: "createdAt" },
-    { text: "最后修改时间", value: "updatedAt" }
+    { text: '分类名', value: 'label' },
+    { text: '颜色', value: 'colro' },
+    { text: '热度', value: 'hot' },
+    { text: '创建时间', value: 'createdAt' },
+    { text: '最后修改时间', value: 'updatedAt' },
   ];
   private tags: any = {
     label: {
-      value: "",
-      rule: [(v: string) => !!v || "tag必须填写哦!"]
-    }
+      value: '',
+      rule: [(v: string) => !!v || 'tag必须填写哦!'],
+    },
   };
   private async operating(): Promise<void> {
     if ((this.$refs.form as any).validate()) {
@@ -94,9 +94,9 @@ export default class Tags extends Vue {
           mutation: CREATE,
           variables: {
             tags: {
-              label: await this.tags.label.value
-            }
-          }
+              label: await this.tags.label.value,
+            },
+          },
         });
         this.allTags.push(result.data.createTags);
         NProgress.done();

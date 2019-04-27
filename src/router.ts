@@ -72,6 +72,13 @@ const routes: RouteConfig[] = [
           title: '附件',
         },
       },
+      {
+        path: '/options',
+        component: () => import('@/components/options/index.vue'),
+        meta: {
+          title: '设置',
+        },
+      },
     ],
   },
 ];

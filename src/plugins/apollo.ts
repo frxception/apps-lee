@@ -15,7 +15,7 @@ const AUTH_TOKEN = 'token';
 
 // Http endpoint
 const httpEndpoint =
-  process.env.VUE_APP_GRAPHQL_HTTP || 'http://172.17.0.61:3001/api/graphql';
+  process.env.VUE_APP_GRAPHQL_HTTP || 'https://teeoo.cn/graphql';
 
 // Config
 const defaultOptions = {

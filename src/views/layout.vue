@@ -104,6 +104,7 @@ export default class Layout extends Vue {
       icon: 'settings',
       color: 'cyan',
       title: '设置',
+      path: '/options',
     },
   ];
 }
