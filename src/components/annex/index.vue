@@ -19,11 +19,11 @@
                 v-btn(flat small) 删除选中数据
               v-btn(flat small) 全部删除
     v-card(flat)
-        upload-btn(title='上传附件' name="file" flat color small :fileChangedCallback="upload")
+        v-upload(title='上传附件' name="file" flat color small :fileChangedCallback="upload")
           template(slot='icon-left')
             v-icon(left='' ) add
         v-data-table(v-model="selected",:no-results-text="`没有找到和 ' ${search} ' 相关的数据哦`",
-        no-data-text="还没有数据哦,快去添加条吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
+        no-data-text="还没有数据哦,快去上传吧!",:loading="loading",:pagination.sync="pagination",item-key="id",
         :headers="headers",:items="allAnnex",:search="search",select-all,rows-per-page-text="每页行数")
           template(v-slot:items="props")
               td
@@ -42,13 +42,12 @@
 </template>
 <script lang="ts">
 import gql from 'graphql-tag';
-import UploadButton from 'vuetify-upload-button';
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import axios from 'axios';
-
+import {Upolad} from '@/components/widget';
 @Component({
   components: {
-    'upload-btn': UploadButton,
+    'v-upload': Upolad,
   },
   apollo: {
     allAnnex() {
@@ -71,14 +70,6 @@ import axios from 'axios';
             }
           }
         `,
-        result(result: object) {
-          /* tslint:disable:no-console */
-          console.log(
-            '%cINFO',
-            'background: #48BB31; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
-            `Message: [Category result]: ${JSON.stringify(result)}`,
-          );
-        },
         fetchPolicy: 'cache-and-network',
       };
     },
@@ -126,13 +117,11 @@ export default class Annex extends Vue {
   public onSelectedChanged(val: object, oldVal: any) {
     this.selectedcount = Object.keys(val).length;
   }
-
   public upload(file: any) {
-    console.info(file);
     const formData = new FormData();
     formData.append('file', file);
     axios
-      .post('http://127.0.0.1:3001/annex', formData, {
+      .post('http://172.17.0.61:3001/annex', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${this.$store.state.token}`,
@@ -142,26 +131,8 @@ export default class Annex extends Vue {
         this.allAnnex.push(data.data);
       })
       .catch((error: any) => {
-        // this.$toast('上传附件失败');
+        this.$message.error('上传附件失败');
       });
   }
 }
 </script>
-
-<style lang="stylus" scoped>
-.theme--light.v-table tbody tr:not(:last-child) {
-  border-bottom: none;
-}
-
-.theme--light.v-datatable .v-datatable__actions {
-  border-top: none;
-}
-
-.theme--light.v-table thead tr:first-child {
-  border-bottom: none;
-}
-
-tbody tr:nth-child(odd) {
-  background: #f4f4f4;
-}
-</style>

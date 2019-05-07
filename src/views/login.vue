@@ -1,19 +1,19 @@
 <template lang="pug">
-    v-app.login.primary
-        v-content
-            v-container(fluid fill-height)
-                v-layout(align-center justify-center)
-                    v-flex(xs12 sm8 md4 lg4)
-                        v-card(flat).pa-3
-                            v-card-text
-                                div.layout.column.align-center
-                                    h1.flex.my-4.primary--text 登录 BLOG
-                                v-form(v-model="valid",ref="form",lazy-validation)
-                                    v-text-field(v-model="login.username.value",:rules="login.username.rule",prepend-icon="person",label="用户名",type="text")
-                                    v-text-field(v-model="login.password.value",:rules="login.password.rule",prepend-icon="lock",label="密码",type="password")
-                            v-card-actions
-                                v-spacer
-                                v-btn(color="primary",:loading="loading",:disabled="!valid",@click="submit") 发射
+v-app#login.primary
+    v-content
+        v-container(fluid, fill-height)
+            v-layout(align-center, justify-center)
+                v-flex(xs12, sm8, md4, lg)
+                    v-card(flat)
+                        v-card-text
+                            .layout.column.align-center
+                                h1.flex.my-4.primary--text 登录 BLOG
+                            v-form(v-model="valid",ref="form",lazy-validation)
+                                v-text-field(v-model="login.username.value",:rules="login.username.rule",prepend-icon="person",label="用户名",type="text")
+                                v-text-field(v-model="login.password.value",:rules="login.password.rule",prepend-icon="lock",label="密码",type="password")
+                        v-card-actions
+                            v-spacer
+                            v-btn(color="primary",:loading="loading",:disabled="!valid",@click="submit") 登录
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
@@ -40,10 +40,9 @@ export default class Login extends Vue {
     },
     password: {
       value: '',
-      rule: [(v: string) => !!v || '不写密码可不是什么好孩子呢!'],
+      rule: [(v: string) => !!v || '不写密码真的好吗?'],
     },
   };
-
   private async submit(): Promise<void> {
     this.loading = true;
     if ((this.$refs.form as any).validate()) {
@@ -60,25 +59,10 @@ export default class Login extends Vue {
           path: (this.$route.query.redirect as any) || '/',
         });
       } catch (error) {
-        // error.toString();
-        // console.info(error);
-        // 哎呀,好像出问题了
-        // this.$toast(error);
+        this.$message(`${error.graphQLErrors[0]}`);
       }
     }
     this.loading = false;
   }
 }
 </script>
-<style lang="stylus" scoped>
-.login {
-  height: 50%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: '';
-  z-index: 0;
-}
-</style>
-

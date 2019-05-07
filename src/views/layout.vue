@@ -1,5 +1,5 @@
 <template lang="pug">
-v-app(:dark='dark')
+v-app(:dark="dark")
     v-navigation-drawer(floating,:width="256",:mini-variant='mini',:clipped='clipped',v-model='drawer', fixed, app)
         v-img(src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg",:aspect-ratio="16/9").headimg
             v-layout(pa-2 column fill-height).lightbox.white--text
@@ -16,9 +16,9 @@ v-app(:dark='dark')
                 v-divider(v-if="item.divider" :key="i")
                 v-list-tile(v-else :key="item.title" :to="item.path")
                     v-list-tile-action
-                        v-icon {{ item.icon }}
+                        v-icon(:color="item.color") {{ item.icon }}
                     v-list-tile-title {{ item.title }}
-    v-toolbar(app,dark,:clipped-left='clipped',color="blue")
+    v-toolbar(app,:clipped-left='clipped',dark,color='blue')
         v-toolbar-side-icon(@click.stop='drawer = !drawer')
         v-btn(icon='', @click.stop='mini = !mini')
             v-icon(v-html="mini ? 'chevron_right' : 'chevron_left'")
@@ -34,14 +34,11 @@ v-app(:dark='dark')
             v-icon apps
         v-btn(icon)
             v-icon notifications
-    v-content(style='margin:1rem')
+    v-content
+      v-container(fluid)
         transition(name="slide-x-transition",mode="out-in")
             router-view
-    v-footer(height='auto',app)
-        span(justify-center='')
-          | ©2018 — 
-          strong Lee
-
+    v-footer(app)
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
@@ -59,9 +56,6 @@ export default class Layout extends Vue {
       title: '首页',
       path: '/dashboard',
     },
-    // {
-    //   divider: true,
-    // },
     {
       icon: 'bookmark',
       color: 'orange',
@@ -82,9 +76,9 @@ export default class Layout extends Vue {
     },
     // {
     //   icon: 'pages',
-    //   color: 'purple',
+    //   color: 'indigo',
     //   title: '页面',
-    //   path: '/article',
+    //   path: '/pages',
     // },
     {
       icon: 'message',
@@ -93,13 +87,10 @@ export default class Layout extends Vue {
     },
     {
       icon: 'folder',
-      color: 'pink',
+      color: 'teal',
       title: '附件',
       path: '/annex',
     },
-    // {
-    //   divider: true,
-    // },
     {
       icon: 'settings',
       color: 'cyan',

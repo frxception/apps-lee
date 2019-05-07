@@ -4,10 +4,6 @@ import NProgress from 'nprogress';
 import stroe from './store';
 
 Vue.use(Router);
-/* tslint:disable:max-line-length */
-NProgress.configure({
-  showSpinner: true,
-});
 
 const routes: RouteConfig[] = [
   {
@@ -19,69 +15,49 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/',
-    redirect: 'dashboard',
+    redirect: '/dashboard',
     component: () => import('@/views/layout.vue'),
-    meta: { auth: true, title: '首页' },
+    meta: { auth: true},
     children: [
       {
         path: '/dashboard',
         component: () => import('@/components/dashboard/index.vue'),
         meta: {
-          title: '首页',
+          title: '仪表盘',
         },
       },
       {
         path: '/category',
         component: () => import('@/components/category/index.vue'),
         meta: {
-          title: '分类',
-        },
-      },
-      {
-        path: '/article',
-        component: () => import('@/components/article/index.vue'),
-        meta: {
-          title: '管理文章',
-        },
-      },
-      {
-        path: '/article/create',
-        component: () => import('@/components/article/create.vue'),
-        meta: {
-          title: '创建文章',
-        },
-      },
-      {
-        path: '/article/edit/:id',
-        component: () => import('@/components/article/create.vue'),
-        meta: {
-          title: '编辑文章',
+          title: '分类管理',
         },
       },
       {
         path: '/tags',
         component: () => import('@/components/tags/index.vue'),
         meta: {
-          title: 'Tags',
+          title: '标签管理',
+        },
+      },
+      {
+        path: '/article',
+        component: () => import('@/components/article/index.vue'),
+        meta: {
+          title: '文章管理',
         },
       },
       {
         path: '/annex',
         component: () => import('@/components/annex/index.vue'),
         meta: {
-          title: '附件',
-        },
-      },
-      {
-        path: '/options',
-        component: () => import('@/components/options/index.vue'),
-        meta: {
-          title: '设置',
+          title: '附件管理',
         },
       },
     ],
   },
 ];
+
 const router: Router = new Router({
   mode: 'history',
   routes,

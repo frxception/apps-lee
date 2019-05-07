@@ -1,62 +1,53 @@
 <template lang="pug">
 v-card(flat)
-    v-layout(row,wrap)
-        v-flex(xs12 sm4)
-            v-card-text
-                v-form(ref='form',v-model='valid', lazy-validation)
-                    v-text-field(v-model="category.label.value",:rules="category.label.rule",label='分类名')
-                    v-text-field(v-model="category.slug.value",:rules="category.slug.rule",label='别名')
-                    v-select(v-model="category.parent.value",:rules="category.parent.rule",:items="allCategory",item-text="label",item-value="id",label='父级')
-                    v-text-field(v-model="category.desc.value",:rules="category.desc.rule",label='描述')
-            v-card-actions
-                v-spacer
-                v-btn(:loading="loading",:disabled="!valid",color='primary', flat, @click='operating()') 确认
-        v-flex(xs12 sm8)
-            v-btn(color='success',small,flat) 刷新
-                v-icon(small) refresh
-            v-btn(color='error',small,flat,:disabled='disabled') 批量删除
-                v-icon(small) format_align_left
-                v-badge(v-show='!disabled')
-                    template(v-slot:badge='')
-                        span {{count}}
-            v-data-table(item-key="id",v-model='selected',:headers='headers', :items='allCategory',hide-actions,select-all,:pagination.sync="pagination")
-                template(v-slot:items='props')
-                    tr(:active='props.selected' @click='props.selected = !props.selected')
-                        td
-                            v-checkbox(:input-value='props.selected',color='pink', hide-details)
-                        td {{ props.item.label }}
-                        td
-                            v-chip.ml-0(color='`teal lighten-4`', label='', small='') {{ props.item.count }}
-                        td {{ props.item.desc }}
-                        td {{ props.item.slug }}
-                        td 0
-                        td 
-                            v-tooltip(top)
-                                template(v-slot:activator='{ on }')
-                                    span(v-on='on') {{ props.item.createdAt | date }}
-                                span {{ props.item.createdAt | formatdate }}
-                        td.justify-center.layout.px-0
-                            v-btn(color='success',icon,small,flat,@click='updete(props.item)') 
-                                v-icon(small) edit
-                            v-btn(color='error',icon,small,flat,@click='remove(props.item)') 
-                                v-icon(small) delete
+    v-card-title
+        v-spacer
+        v-btn(dark,small,color="info",@click="drawer=true") 新增
+    v-card-text
+        v-data-table(item-key="id",:headers='headers', :items='allCategory',select-all,no-data-text="还没有分类哦,快去添加一条吧!",rows-per-page-text="每页行数")
+            template(v-slot:items='props')
+                    //- tr(:active='props.selected' @click='props.selected = !props.selected')
+                    td
+                        v-checkbox(:input-value='props.selected',color='pink', hide-details)
+                    td {{ props.item.label }}
+                    td {{ props.item.count }}
+                    td {{ props.item.desc }}
+                    td {{ props.item.slug }}
+                    td 0
+                    td 
+                        v-tooltip(top)
+                            template(v-slot:activator='{ on }')
+                                span(v-on='on') {{ props.item.createdAt | date }}
+                            span {{ props.item.createdAt | formatdate }}
+                    td.justify-center.layout.px-0
+                        v-btn(color='success',icon,small,flat,@click='updete(props.item)') 
+                            v-icon(small) edit
+                        v-btn(color='error',icon,small,flat,@click='remove(props.item)') 
+                            v-icon(small) delete
+    v-card-actions
+    v-navigation-drawer(v-model='drawer',temporary,right,hide-overlay,fixed)
+        v-toolbar(color='blue', dark='')
+            v-toolbar-title
+                span(v-if="updateId === 0") 新增分类
+                span(v-else) 修改分类
+        v-container()
+            v-card(flat='')
+                v-card-text
+                  v-form(ref='form',v-model='valid', lazy-validation)
+                      v-text-field(v-model="category.label.value",:rules="category.label.rule",label='分类名')
+                      v-text-field(v-model="category.slug.value",:rules="category.slug.rule",label='别名')
+                      v-select(v-model="category.parent.value",:rules="category.parent.rule",:items="allCategory",item-text="label",item-value="id",label='父级')
+                      v-text-field(v-model="category.desc.value",:rules="category.desc.rule",label='描述')
+                v-card-actions
+                    v-spacer
+                    v-btn(:loading="loading",:disabled="!valid",color='primary', flat, @click='operating()') 确认
 
-            .text-xs-center.pt-2
-                v-pagination(v-model='pagination.page', :length='pages')
-    v-layout(row,wrap)
-        v-flex(xs12 sm4)  
-            v-treeview(:active.sync="active",activatable,open-on-click,transition :items="allCategoryByTree" item-text='label' item-key='id' open-all)
-                template(v-slot:prepend='{ item, open , active }')
-                    v-icon bookmark
-        v-flex(xs12 sm8)  
-            v-scroll-y-transition(mode='out-in')
-                // TODO:
 </template>
+
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import NProgress from 'nprogress';
-import { ALLCATEGORY, BYTREE, CREATE, UPDATE, DELETE } from '@/graphql/category';
-
+import { ALLCATEGORY, CREATE, UPDATE, DELETE } from '@/graphql/category';
 @Component({
   apollo: {
     allCategory() {
@@ -64,15 +55,12 @@ import { ALLCATEGORY, BYTREE, CREATE, UPDATE, DELETE } from '@/graphql/category'
         query: ALLCATEGORY,
       };
     },
-    allCategoryByTree() {
-      return {
-        query: BYTREE,
-      };
-    },
   },
 })
-
 export default class Category extends Vue {
+  // 右侧表单
+  private drawer: boolean = false;
+  // 修改的id
   private updateId: number = 0;
   // 所有分类
   private allCategory: any;
@@ -119,24 +107,9 @@ export default class Category extends Vue {
       align: 'center',
     },
   ];
-  // 选中数据
-  private selected: any = [];
-  // 选中数量
-  private count: number = 0;
-  // tree选中
-  private seletree: any = [];
-  // 分页
-  private pagination: any = {
-    // descending: true,
-    // page: 1,
-    rowsPerPage: 5,
-    // sortBy: 'id',
-  };
-  // 批量操作
-  private disabled: boolean = true;
   // 验证
   private valid: boolean = true;
-  // 表单内容
+
   private category: any = {
     label: {
       value: '',
@@ -155,19 +128,14 @@ export default class Category extends Vue {
       rule: [],
     },
   };
+  // 表单内容
 
-  @Watch('selected')
-  private onSelected(val: object, oldVal: any) {
-    this.count = Object.keys(val).length;
-    if (this.count > 0) {
-      this.disabled = true;
+  @Watch('drawer')
+  private onDrawer(val: object, oldVal: any) {
+    if (!val) {
+      this.updateId = 0;
+      (this.$refs.form as any).reset();
     }
-    this.disabled = !this.disabled;
-  }
-
-  @Watch('active')
-  private onActive(val: object, oldVal: any) {
-    // this.seletree = false
   }
 
   private updete(data: any) {
@@ -176,6 +144,7 @@ export default class Category extends Vue {
     this.category.desc.value = data.desc;
     this.category.parent.value = data.parent;
     this.updateId = data.id;
+    this.drawer = true;
   }
 
   private async operating(): Promise<void> {
@@ -196,6 +165,8 @@ export default class Category extends Vue {
             },
           });
           this.allCategory.push(result.data.createCategory);
+          (this.$refs.form as any).reset();
+          this.drawer = false;
           NProgress.done();
         } catch (error) {
           NProgress.done();
@@ -219,6 +190,8 @@ export default class Category extends Vue {
             },
           });
           NProgress.done();
+          (this.$refs.form as any).reset();
+          this.drawer = false;
         } catch (error) {
           NProgress.done();
         }
@@ -241,16 +214,5 @@ export default class Category extends Vue {
       NProgress.done();
     }
   }
-
-  private get pages(): number | any {
-    if (
-      this.pagination.rowsPerPage === undefined ||
-      this.pagination.totalItems === undefined
-    ) {
-      return 0;
-    }
-    return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
-  }
-
 }
 </script>

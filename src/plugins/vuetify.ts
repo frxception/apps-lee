@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import {VuetifyToast} from '@/components/widget';
 import 'vuetify/src/stylus/app.styl';
-import zhHans from 'vuetify/src/locale/zh-Hans';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+
 Vue.use(Vuetify, {
   theme: {
     primary: '#ee44aa',
@@ -18,8 +19,23 @@ Vue.use(Vuetify, {
     customProperties: true,
   },
   iconfont: 'md',
-  // lang: {
-  //   locales: { zhHans },
-  //   current: 'zh-Hans',
-  // },
+});
+
+Vue.use(VuetifyToast, {
+  x: 'right',
+  y: 'top',
+  color: '',
+  icon: 'info',
+  timeout: 5000,
+  dismissable: true,
+  autoHeight: false,
+  multiLine: false,
+  vertical: false,
+  queueable: false,
+  shorts: {
+    custom: {
+      color: 'purple',
+    },
+  },
+  property: '$message',
 });
