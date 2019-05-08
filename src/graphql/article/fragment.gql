@@ -24,5 +24,4 @@ fragment fields on Article {
   allowPing
   createdAt
   updatedAt
-  dataVersion
 }

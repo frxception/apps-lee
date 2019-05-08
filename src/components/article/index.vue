@@ -59,7 +59,7 @@ div
                     //     span {{ props.item.updatedAt | formatdate }}
                     td.text-xs-center
                         v-btn(color='success',small,flat,round,@click=`$router.push("/article/edit/2")`) 编辑
-                        v-btn(v-if='props.item.status',color='error',icon,small,flat,round) 移到草稿
+                        v-btn(v-if='props.item.status',color='error',small,flat,round) 移到草稿
                         v-btn(v-else,small,flat,round) 快速发布
                         v-btn(color='error',small,flat,round,@click='remove(props.item)') 删除
 

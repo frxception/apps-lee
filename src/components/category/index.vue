@@ -19,7 +19,7 @@ v-card(flat)
                             template(v-slot:activator='{ on }')
                                 span(v-on='on') {{ props.item.createdAt | date }}
                             span {{ props.item.createdAt | formatdate }}
-                    td.justify-center.layout.px-0
+                    td.text-xs-center
                         v-btn(color='success',icon,small,flat,@click='updete(props.item)') 
                             v-icon(small) edit
                         v-btn(color='error',icon,small,flat,@click='remove(props.item)') 

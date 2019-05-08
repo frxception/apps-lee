@@ -1,3 +1,4 @@
+declare module 'twemoji'
 declare module 'v-charts';
 declare module 'nprogress';
 declare module 'vue-cli-plugin-apollo/graphql-client';

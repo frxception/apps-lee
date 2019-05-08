@@ -57,20 +57,23 @@ v-form(v-model="valid",ref="form",lazy-validation)
         v-flex(xs12 sm2)
           v-card(flat)
             v-card-text
-              div(class="grey--text subheading") 标签
-                v-combobox(item-text="label",item-value="id",clearable,:search-input.sync="search",hide-selected,multiple,small-chips,v-model="article.tags.value",:items="allTags",:rules="article.tags.rule",label="Tags")
-              div(class="grey--text subheading") 分类
-                v-select(clearable,:rules="article.category.rule",v-model="article.category.value",:items="allCategory",item-text="label",item-value="id",label="分类")
-              div(class="grey--text subheading") 状态
-                v-radio-group(row,v-model="article.status.value")
-                  v-radio(label="发布文章",:value=`1`)
-                  v-radio(label="保存草稿",:value=`0`)
-              div(class="grey--text subheading") 公开度
-                v-select(label="公开度",@change="publishSelect",v-model="article.publish.value",:items="publicstate",item-text="v",item-value="k")
-                v-text-field(v-if="password",label="密码",v-model="article.password.value",:rules="article.password.rule")
-              div(class="grey--text subheading") 权限控制
-                v-switch(v-model="article.allowComment.value",label="允许评论",color="red")
-                v-switch(v-model="article.isTop.value",v-if="isTop",label="是否置顶",color="red")
+              //- div(class="grey--text subheading") 标签
+              v-combobox(item-text="label",item-value="id",clearable,:search-input.sync="search",hide-selected,multiple,small-chips,v-model="article.tags.value",:items="allTags",:rules="article.tags.rule",label="Tags")
+              //- div(class="grey--text subheading") 分类
+              v-select(clearable,:rules="article.category.rule",v-model="article.category.value",:items="allCategory",item-text="label",item-value="id",label="分类")
+              //- div(class="grey--text subheading") 状态
+              v-radio-group(row,v-model="article.status.value")
+                v-radio(label="发布文章",:value="true")
+                v-radio(label="保存草稿",:value="false")
+              //- div(class="grey--text subheading") 公开度
+              v-select(label="公开度",@change="publishSelect",v-model="article.publish.value",:items="publicstate",item-text="v",item-value="k")
+              v-text-field(v-if="password",label="密码",v-model="article.password.value",:rules="article.password.rule")
+              //- div(class="grey--text subheading") 权限控制
+              v-switch(v-model="article.allowComment.value",label="允许评论",color="red")
+              v-switch(v-model="article.isTop.value",v-if="isTop",label="是否置顶",color="red")
+              v-select(item-text="label",item-value="id",label="内容类别",:items="types",v-model="article.type.value",:rules="article.type.rule")
+              v-select(v-if="article.type.value===2",item-text="v",item-value="k",label="模板",:items="template",v-model="article.template.value",:rules="article.template.rule")
+
 
 </template>
 <script lang="ts">
@@ -149,6 +152,33 @@ export default class ArticleCreate extends Vue {
       v: '私有',
     },
   ];
+
+  // 内容类别
+  private types: any = [
+    {id:1,label:"文章"},
+    {id:2,label:"单页面"}
+  ]
+  // 模板
+  private template:any=[
+    {
+      k:"default",v:"不选择"
+    },
+    {
+      k:"files",v:"文章归档"
+    },
+    {
+      k:"links",v:"友情链接"
+    },
+    {
+      k:"cross",v:"时光机"
+    },
+    {
+      k:"github",v:"github"
+    },
+    {
+      k:"message",v:"留言板"
+    }
+  ]
   // 是否置顶
   private isTop: boolean = true;
   // 提交内容
@@ -190,7 +220,7 @@ export default class ArticleCreate extends Vue {
     },
     // 发布状态:{"1":"发布","0":"草稿"}
     status: {
-      value: 1,
+      value: true,
       rule: [],
     },
     // 内容状态:{"publish":"公开","hidden":"隐藏","password":"密码保护"}
@@ -213,6 +243,11 @@ export default class ArticleCreate extends Vue {
       value: true,
       rule: [],
     },
+    // 单页面模板
+    template:{
+      value: "default",
+      rule: [(v: string) => !!v || '必须选择一个模板!'],
+    }
   };
 
   private init() {
@@ -289,6 +324,7 @@ export default class ArticleCreate extends Vue {
     }
     this.loading = false;
   }
+
   private mounted() {
     this.init();
   }

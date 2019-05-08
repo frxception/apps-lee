@@ -48,6 +48,13 @@ const routes: RouteConfig[] = [
         },
       },
       {
+        path: '/article/create',
+        component: () => import('@/components/article/create.vue'),
+        meta: {
+          title: '添加文章',
+        },
+      },
+      {
         path: '/annex',
         component: () => import('@/components/annex/index.vue'),
         meta: {
