@@ -1,6 +1,0 @@
-#import "./fragment.gql"
-query {
-  allArticle {
-    ...fields
-  }
-}

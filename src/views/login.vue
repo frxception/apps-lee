@@ -1,19 +1,41 @@
-<template lang="pug">
-v-app#login.primary
-    v-content
-        v-container(fluid, fill-height)
-            v-layout(align-center, justify-center)
-                v-flex(xs12, sm8, md4, lg)
-                    v-card(flat)
-                        v-card-text
-                            .layout.column.align-center
-                                h1.flex.my-4.primary--text 登录 BLOG
-                            v-form(v-model="valid",ref="form",lazy-validation)
-                                v-text-field(v-model="login.username.value",:rules="login.username.rule",prepend-icon="person",label="用户名",type="text")
-                                v-text-field(v-model="login.password.value",:rules="login.password.rule",prepend-icon="lock",label="密码",type="password")
-                        v-card-actions
-                            v-spacer
-                            v-btn(color="primary",:loading="loading",:disabled="!valid",@click="submit") 登录
+<template>
+  <v-app class="primary" id="login">
+    <v-content>
+      <v-container fluid="fluid" fill-height="fill-height">
+        <v-layout align-center="align-center" justify-center="justify-center">
+          <v-flex xs12="xs12" sm8="sm8" md4="md4" lg="lg">
+            <v-card flat="flat">
+              <v-card-text>
+                <div class="layout column align-center">
+                  <h1 class="flex my-4 primary--text">登录 BLOG</h1>
+                </div>
+                <v-form v-model="valid" ref="form" lazy-validation="lazy-validation">
+                  <v-text-field
+                    v-model="login.username.value"
+                    :rules="login.username.rule"
+                    prepend-icon="person"
+                    label="用户名"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="login.password.value"
+                    :rules="login.password.rule"
+                    prepend-icon="lock"
+                    label="密码"
+                    type="password"
+                  ></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" :loading="loading" :disabled="!valid" @click="submit">登录</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';

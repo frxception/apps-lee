@@ -1,7 +1,0 @@
-#import "./fragment.gql"
-query {
-  allCategoryByTree {
-    ...fields
-    children
-  }
-}

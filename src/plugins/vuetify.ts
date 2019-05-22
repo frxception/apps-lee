@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {VuetifyToast} from '@/components/widget';
 import 'vuetify/src/stylus/app.styl';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import { VuetifyToast } from '@/components/widget';
 
 Vue.use(Vuetify, {
   theme: {
@@ -20,7 +20,6 @@ Vue.use(Vuetify, {
   },
   iconfont: 'md',
 });
-
 Vue.use(VuetifyToast, {
   x: 'right',
   y: 'top',

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router, { RouteConfig, Route } from 'vue-router';
 import NProgress from 'nprogress';
-import stroe from './store';
+import stroe from '@/store';
 
 Vue.use(Router);
 
@@ -17,7 +17,7 @@ const routes: RouteConfig[] = [
     path: '/',
     redirect: '/dashboard',
     component: () => import('@/views/layout.vue'),
-    meta: { auth: true},
+    meta: { auth: true },
     children: [
       {
         path: '/dashboard',
@@ -48,17 +48,17 @@ const routes: RouteConfig[] = [
         },
       },
       {
-        path: '/article/create',
+        path: 'article/create',
         component: () => import('@/components/article/create.vue'),
         meta: {
-          title: '添加文章',
+          title: '新增文章',
         },
       },
       {
-        path: '/annex',
-        component: () => import('@/components/annex/index.vue'),
+        path: 'article/update/:id',
+        component: () => import('@/components/article/update.vue'),
         meta: {
-          title: '附件管理',
+          title: '编辑文章',
         },
       },
     ],

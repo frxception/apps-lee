@@ -1,89 +1,184 @@
-<template lang="pug">
-v-form(v-model="valid",ref="form",lazy-validation)
-    v-card(flat)
-      v-layout(row,wrap)
-        v-flex(xs12 sm10)
-          v-card(flat)
-            v-card-text
-              v-text-field(v-model="article.title.value",:rules="article.title.rule",label="标题",type="text",clearable)
-              v-text-field(v-model="article.slug.value",:rules="article.slug.rule",label="别名",type="text",clearable)
-              div.markdown
-                div.toolbars
-                  div.left
-                    span.iconfont.icon-701bianjiqi_chexiao
-                    span.iconfont.icon-702bianjiqi_zhongzuo
-                    span.iconfont.icon-bold1
-                    span.iconfont.icon-strikethrough
-                    span.iconfont.icon-italic1
-                    span.iconfont.icon-quotation_marks
-                    span.iconfont.icon-char
-                    span.iconfont.icon-736bianjiqi_daxie
-                    span.iconfont.icon-737bianjiqi_xiaoxie
-                    span.iconfont.icon-tirbe_icon_h
-                    span.iconfont.icon-tirbe_icon_h1
-                    span.iconfont.icon-tirbe_icon_h2
-                    span.iconfont.icon-richtextbulletedlist
-                    span.iconfont.icon-richtextnumberedlist
-                  div.right
-                    span.iconfont.icon-hr
-                    span.iconfont.icon-link1
-                    span.iconfont.icon-image1
-                    span.iconfont.icon-code
-                    span.iconfont.icon-insert_tag_field
-                    span.iconfont.icon-table
-                    span.iconfont.icon-760bianjiqi_shijian
-                    span.iconfont.icon-755bianjiqi_fenye
-                    span.iconfont.icon-save
-                    span.iconfont.icon-774bianjiqi_yulan
-                    span.iconfont.icon-expand
-                v-layout(wrap)
-                  v-flex(d-flex xs12 sm6 :class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }")
-                    v-textarea(@input="init",@focus="textarealoading=true",@blur="textarealoading=false",:loading="textarealoading",:single-line="true",v-model="article.text.value",:flat="true",:rows="20",label="输入内容",:clearable="false")
-                  v-flex(d-flex xs12 sm6 :class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }")
-                    //- v-select(attach label="预览" :items="preview",v-model="type")
-                    div(v-if="type === 'preview'" v-html="article.html.value")
-                    v-textarea(v-else :value="article.html.value",auto-grow box readonly)
-                span 共计:
-                v-chip(small,color="primary",text-color="white") 字数 {{wordcount}}
-                span 其中包含:
-                v-chip(small,color="red",text-color="white") {{character}} 个文字
-                v-chip(small,color="green",text-color="white") {{symbol}} 个符号
-                v-chip(small,color="pink",text-color="white") {{letter}} 个字母
-                v-chip(small,color="teal",text-color="white") {{digital}} 个数字
-                v-chip(small,color="orange",text-color="white") {{emoji}} 个emoji
-            v-card-actions
-              v-spacer
-              v-btn(flat,@click='release()',:loading="loading",:disabled="!valid") 发布文章
-        v-flex(xs12 sm2)
-          v-card(flat)
-            v-card-text
-              //- div(class="grey--text subheading") 标签
-              v-combobox(item-text="label",item-value="id",clearable,:search-input.sync="search",hide-selected,multiple,small-chips,v-model="article.tags.value",:items="allTags",:rules="article.tags.rule",label="Tags")
-              //- div(class="grey--text subheading") 分类
-              v-select(clearable,:rules="article.category.rule",v-model="article.category.value",:items="allCategory",item-text="label",item-value="id",label="分类")
-              //- div(class="grey--text subheading") 状态
-              v-radio-group(row,v-model="article.status.value")
-                v-radio(label="发布文章",:value="true")
-                v-radio(label="保存草稿",:value="false")
-              //- div(class="grey--text subheading") 公开度
-              v-select(label="公开度",@change="publishSelect",v-model="article.publish.value",:items="publicstate",item-text="v",item-value="k")
-              v-text-field(v-if="password",label="密码",v-model="article.password.value",:rules="article.password.rule")
-              //- div(class="grey--text subheading") 权限控制
-              v-switch(v-model="article.allowComment.value",label="允许评论",color="red")
-              v-switch(v-model="article.isTop.value",v-if="isTop",label="是否置顶",color="red")
-              v-select(item-text="label",item-value="id",label="内容类别",:items="types",v-model="article.type.value",:rules="article.type.rule")
-              v-select(v-if="article.type.value===2",item-text="v",item-value="k",label="模板",:items="template",v-model="article.template.value",:rules="article.template.rule")
-
-
+<template>
+  <v-form v-model="valid" ref="form" lazy-validation="lazy-validation">
+    <v-card flat="flat">
+      <v-layout row="row" wrap="wrap">
+        <v-flex xs12="xs12" sm10="sm10">
+          <v-card flat="flat">
+            <v-card-text>
+              <v-text-field
+                v-model="article.title.value"
+                :rules="article.title.rule"
+                label="标题"
+                type="text"
+                clearable="clearable"
+              ></v-text-field>
+              <v-text-field
+                v-model="article.slug.value"
+                :rules="article.slug.rule"
+                label="别名"
+                type="text"
+                clearable="clearable"
+              ></v-text-field>
+              <div class="markdown">
+                <div class="toolbars">
+                  <div class="left">
+                    <span class="iconfont icon-701bianjiqi_chexiao"></span>
+                    <span class="iconfont icon-702bianjiqi_zhongzuo"></span>
+                    <span class="iconfont icon-bold1"></span>
+                    <span class="iconfont icon-strikethrough"></span>
+                    <span class="iconfont icon-italic1"></span>
+                    <span class="iconfont icon-quotation_marks"></span>
+                    <span class="iconfont icon-char"></span>
+                    <span class="iconfont icon-736bianjiqi_daxie"></span>
+                    <span class="iconfont icon-737bianjiqi_xiaoxie"></span>
+                    <span class="iconfont icon-tirbe_icon_h"></span>
+                    <span class="iconfont icon-tirbe_icon_h1"></span>
+                    <span class="iconfont icon-tirbe_icon_h2"></span>
+                    <span class="iconfont icon-richtextbulletedlist"></span>
+                    <span class="iconfont icon-richtextnumberedlist"></span>
+                  </div>
+                  <div class="right">
+                    <span class="iconfont icon-hr"></span>
+                    <span class="iconfont icon-link1"></span>
+                    <span class="iconfont icon-image1"></span>
+                    <span class="iconfont icon-code"></span>
+                    <span class="iconfont icon-insert_tag_field"></span>
+                    <span class="iconfont icon-table"></span>
+                    <span class="iconfont icon-760bianjiqi_shijian"></span>
+                    <span class="iconfont icon-755bianjiqi_fenye"></span>
+                    <span class="iconfont icon-save"></span>
+                    <span class="iconfont icon-774bianjiqi_yulan"></span>
+                    <span class="iconfont icon-expand"></span>
+                  </div>
+                </div>
+                <v-layout wrap="wrap">
+                  <v-flex
+                    d-flex="d-flex"
+                    xs12="xs12"
+                    sm6="sm6"
+                    :class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }"
+                  >
+                    <v-textarea
+                      @input="init"
+                      @focus="textarealoading=true"
+                      @blur="textarealoading=false"
+                      :loading="textarealoading"
+                      :single-line="true"
+                      v-model="article.text.value"
+                      :flat="true"
+                      :rows="20"
+                      label="输入内容"
+                      :clearable="false"
+                    ></v-textarea>
+                  </v-flex>
+                  <v-flex
+                    d-flex="d-flex"
+                    xs12="xs12"
+                    sm6="sm6"
+                    :class="{ ['pl-3']: this.$vuetify.breakpoint.smAndUp }"
+                  >
+                    <div v-if="type === 'preview'" v-html="article.html.value"></div>
+                    <v-textarea
+                      v-else
+                      :value="article.html.value"
+                      auto-grow="auto-grow"
+                      box="box"
+                      readonly="readonly"
+                    ></v-textarea>
+                    <!-- <v-select attach="attach" label="预览" :items="preview" v-model="type"></v-select> -->
+                  </v-flex>
+                </v-layout>
+                <span>共计:</span>
+                <v-chip small="small" color="primary" text-color="white">字数 {{wordcount}}</v-chip>
+                <span>其中包含:</span>
+                <v-chip small="small" color="red" text-color="white">{{character}} 个文字</v-chip>
+                <v-chip small="small" color="green" text-color="white">{{symbol}} 个符号</v-chip>
+                <v-chip small="small" color="pink" text-color="white">{{letter}} 个字母</v-chip>
+                <v-chip small="small" color="teal" text-color="white">{{digital}} 个数字</v-chip>
+                <v-chip small="small" color="orange" text-color="white">{{emoji}} 个emoji</v-chip>
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat="flat" @click="release()" :loading="loading" :disabled="!valid">发布文章</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+        <v-flex xs12="xs12" sm2="sm2">
+          <v-card flat="flat">
+            <v-card-text>
+              <v-combobox
+                item-text="label"
+                item-value="id"
+                clearable="clearable"
+                :search-input.sync="search"
+                hide-selected="hide-selected"
+                multiple="multiple"
+                small-chips="small-chips"
+                v-model="article.tags.value"
+                :items="allTags"
+                :rules="article.tags.rule"
+                label="Tags"
+              ></v-combobox>
+              <v-select
+                clearable="clearable"
+                :rules="article.category.rule"
+                v-model="article.category.value"
+                :items="allCategory"
+                item-text="label"
+                item-value="id"
+                label="分类"
+              ></v-select>
+              <v-radio-group row="row" v-model="article.status.value">
+                <v-radio label="发布文章" :value="true"></v-radio>
+                <v-radio label="保存草稿" :value="false"></v-radio>
+              </v-radio-group>
+              <v-select
+                label="公开度"
+                @change="publishSelect"
+                v-model="article.publish.value"
+                :items="publicstate"
+                item-text="v"
+                item-value="k"
+              ></v-select>
+              <v-text-field
+                v-if="password"
+                label="密码"
+                v-model="article.password.value"
+                :rules="article.password.rule"
+              ></v-text-field>
+              <v-switch v-model="article.allowComment.value" label="允许评论" color="red"></v-switch>
+              <v-switch v-model="article.isTop.value" v-if="isTop" label="是否置顶" color="red"></v-switch>
+              <v-select
+                item-text="label"
+                item-value="id"
+                label="内容类别"
+                :items="types"
+                v-model="article.type.value"
+                :rules="article.type.rule"
+              ></v-select>
+              <v-select
+                v-if="article.type.value===2"
+                item-text="v"
+                item-value="k"
+                label="模板"
+                :items="template"
+                v-model="article.template.value"
+                :rules="article.template.rule"
+              ></v-select>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-card>
+  </v-form>
 </template>
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import twemoji from 'twemoji';
-import { ALLTAGS } from '@/graphql/tags';
-import { ALLCATEGORY } from '@/graphql/category';
-import { CREATE } from '@/graphql/article';
+import { ALLTAGS, ALLCATEGORY } from '@/graphql/query';
+import { CREATEARTICLE } from '@/graphql/mutation';
 import '@/assets/font/iconfont.css';
-
 @Component({
   apollo: {
     allTags() {
@@ -152,33 +247,35 @@ export default class ArticleCreate extends Vue {
       v: '私有',
     },
   ];
-
   // 内容类别
-  private types: any = [
-    {id:1,label:"文章"},
-    {id:2,label:"单页面"}
-  ]
+  private types: any = [{ id: 1, label: '文章' }, { id: 2, label: '单页面' }];
   // 模板
-  private template:any=[
+  private template: any = [
     {
-      k:"default",v:"不选择"
+      k: 'default',
+      v: '不选择',
     },
     {
-      k:"files",v:"文章归档"
+      k: 'files',
+      v: '文章归档',
     },
     {
-      k:"links",v:"友情链接"
+      k: 'links',
+      v: '友情链接',
     },
     {
-      k:"cross",v:"时光机"
+      k: 'cross',
+      v: '时光机',
     },
     {
-      k:"github",v:"github"
+      k: 'github',
+      v: 'github',
     },
     {
-      k:"message",v:"留言板"
-    }
-  ]
+      k: 'message',
+      v: '留言板',
+    },
+  ];
   // 是否置顶
   private isTop: boolean = true;
   // 提交内容
@@ -244,12 +341,11 @@ export default class ArticleCreate extends Vue {
       rule: [],
     },
     // 单页面模板
-    template:{
-      value: "default",
+    template: {
+      value: 'default',
       rule: [(v: string) => !!v || '必须选择一个模板!'],
-    }
+    },
   };
-
   private init() {
     const markdown = require('markdown-it')().use(require('markdown-it-emoji'));
     this.article.html.value = markdown.render(this.article.text.value);
@@ -275,7 +371,6 @@ export default class ArticleCreate extends Vue {
     // 计算emoji
     this.emoji = 0;
   }
-
   private publishSelect() {
     if (this.article.publish.value === 'password') {
       this.isTop = false;
@@ -290,13 +385,12 @@ export default class ArticleCreate extends Vue {
       this.password = false;
     }
   }
-
   private async release(): Promise<void> {
     this.loading = true;
     if ((this.$refs.form as any).validate()) {
       try {
         const result = await this.$apollo.mutate({
-          mutation: CREATE,
+          mutation: CREATEARTICLE,
           variables: {
             article: {
               title: await this.article.title.value,
@@ -324,7 +418,6 @@ export default class ArticleCreate extends Vue {
     }
     this.loading = false;
   }
-
   private mounted() {
     this.init();
   }

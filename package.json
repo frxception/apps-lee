@@ -1,5 +1,5 @@
 {
-  "name": "blog-admin",
+  "name": "blog",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,20 +9,15 @@
   },
   "dependencies": {
     "@types/graphql": "^14.2.0",
-    "axios": "^0.18.0",
     "core-js": "^2.6.5",
-    "echarts": "^4.2.1",
     "markdown-it": "^8.4.2",
     "markdown-it-emoji": "^1.4.0",
     "material-design-icons-iconfont": "^3.0.3",
     "moment": "^2.24.0",
     "nprogress": "^0.2.0",
-    "pug": "^2.0.3",
-    "pug-plain-loader": "^1.0.0",
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "twemoji": "^12.0.1",
-    "v-charts": "^1.19.0",
     "vue": "^2.6.10",
     "vue-apollo": "^3.0.0-beta.11",
     "vue-class-component": "^7.0.2",

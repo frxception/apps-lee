@@ -1,53 +1,107 @@
-<template lang="pug">
-v-card(flat)
-    v-card-title
-        v-spacer
-        v-btn(dark,small,color="info",@click="drawer=true") 新增
-    v-card-text
-        v-data-table(item-key="id",:headers='headers', :items='allCategory',select-all,no-data-text="还没有分类哦,快去添加一条吧!",rows-per-page-text="每页行数")
-            template(v-slot:items='props')
-                    //- tr(:active='props.selected' @click='props.selected = !props.selected')
-                    td
-                        v-checkbox(:input-value='props.selected',color='pink', hide-details)
-                    td {{ props.item.label }}
-                    td {{ props.item.count }}
-                    td {{ props.item.desc }}
-                    td {{ props.item.slug }}
-                    td 0
-                    td 
-                        v-tooltip(top)
-                            template(v-slot:activator='{ on }')
-                                span(v-on='on') {{ props.item.createdAt | date }}
-                            span {{ props.item.createdAt | formatdate }}
-                    td.text-xs-center
-                        v-btn(color='success',icon,small,flat,@click='updete(props.item)') 
-                            v-icon(small) edit
-                        v-btn(color='error',icon,small,flat,@click='remove(props.item)') 
-                            v-icon(small) delete
-    v-card-actions
-    v-navigation-drawer(v-model='drawer',temporary,right,hide-overlay,fixed)
-        v-toolbar(color='blue', dark='')
-            v-toolbar-title
-                span(v-if="updateId === 0") 新增分类
-                span(v-else) 修改分类
-        v-container()
-            v-card(flat='')
-                v-card-text
-                  v-form(ref='form',v-model='valid', lazy-validation)
-                      v-text-field(v-model="category.label.value",:rules="category.label.rule",label='分类名')
-                      v-text-field(v-model="category.slug.value",:rules="category.slug.rule",label='别名')
-                      v-select(v-model="category.parent.value",:rules="category.parent.rule",:items="allCategory",item-text="label",item-value="id",label='父级')
-                      v-text-field(v-model="category.desc.value",:rules="category.desc.rule",label='描述')
-                v-card-actions
-                    v-spacer
-                    v-btn(:loading="loading",:disabled="!valid",color='primary', flat, @click='operating()') 确认
-
+<template>
+  <v-card flat="flat">
+    <v-card-title>
+      <v-spacer></v-spacer>
+      <v-btn dark="dark" small="small" color="info" @click="drawer=true">新增</v-btn>
+    </v-card-title>
+    <v-card-text>
+      <v-data-table
+        item-key="id"
+        :headers="headers"
+        :items="allCategory"
+        select-all="select-all"
+        no-data-text="还没有分类哦,快去添加一条吧!"
+        rows-per-page-text="每页行数"
+      >
+        <template v-slot:items="props">
+          <td>
+            <v-checkbox :input-value="props.selected" color="pink" hide-details="hide-details"></v-checkbox>
+          </td>
+          <td>{{ props.item.label }}</td>
+          <td>{{ props.item.count }}</td>
+          <td>{{ props.item.desc }}</td>
+          <td>{{ props.item.slug }}</td>
+          <td>0</td>
+          <td>
+            <v-tooltip top="top">
+              <template v-slot:activator="{ on }">
+                <span v-on="on" v-time="props.item.createdAt"></span>
+              </template>
+              <span v-time="props.item.createdAt"></span>
+            </v-tooltip>
+          </td>
+          <td class="text-xs-center">
+            <v-btn
+              color="success"
+              icon="icon"
+              small="small"
+              flat="flat"
+              @click="updete(props.item)"
+            >
+              <v-icon small="small">edit</v-icon>
+            </v-btn>
+            <v-btn color="error" icon="icon" small="small" flat="flat" @click="remove(props.item)">
+              <v-icon small="small">delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+      </v-data-table>
+    </v-card-text>
+    <v-card-actions></v-card-actions>
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary="temporary"
+      right="right"
+      hide-overlay="hide-overlay"
+      fixed="fixed"
+    >
+      <v-toolbar color="blue" dark>
+        <v-toolbar-title>
+          <span v-if="updateId === 0">新增分类</span>
+          <span v-else>修改分类</span>
+        </v-toolbar-title>
+      </v-toolbar>
+      <v-container>
+        <v-card flat>
+          <v-card-text>
+            <v-form ref="form" v-model="valid" lazy-validation="lazy-validation">
+              <v-text-field v-model="category.label.value" :rules="category.label.rule" label="分类名"></v-text-field>
+              <v-text-field v-model="category.slug.value" :rules="category.slug.rule" label="别名"></v-text-field>
+              <v-select
+                v-model="category.parent.value"
+                :rules="category.parent.rule"
+                :items="allCategory"
+                item-text="label"
+                item-value="id"
+                label="父级"
+              ></v-select>
+              <v-text-field v-model="category.desc.value" :rules="category.desc.rule" label="描述"></v-text-field>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              :loading="loading"
+              :disabled="!valid"
+              color="primary"
+              flat="flat"
+              @click="operating()"
+            >确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-container>
+    </v-navigation-drawer>
+  </v-card>
 </template>
-
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import NProgress from 'nprogress';
-import { ALLCATEGORY, CREATE, UPDATE, DELETE } from '@/graphql/category';
+import { ALLCATEGORY } from '@/graphql/query';
+import {
+  CREATECATEGORY,
+  UPDATECATEGORY,
+  DELETECATEGORY,
+} from '@/graphql/mutation';
 @Component({
   apollo: {
     allCategory() {
@@ -109,7 +163,6 @@ export default class Category extends Vue {
   ];
   // 验证
   private valid: boolean = true;
-
   private category: any = {
     label: {
       value: '',
@@ -129,7 +182,6 @@ export default class Category extends Vue {
     },
   };
   // 表单内容
-
   @Watch('drawer')
   private onDrawer(val: object, oldVal: any) {
     if (!val) {
@@ -137,7 +189,6 @@ export default class Category extends Vue {
       (this.$refs.form as any).reset();
     }
   }
-
   private updete(data: any) {
     this.category.label.value = data.label;
     this.category.slug.value = data.slug;
@@ -146,7 +197,6 @@ export default class Category extends Vue {
     this.updateId = data.id;
     this.drawer = true;
   }
-
   private async operating(): Promise<void> {
     if (this.updateId === 0) {
       this.loading = true;
@@ -154,7 +204,7 @@ export default class Category extends Vue {
         try {
           NProgress.start();
           const result = await this.$apollo.mutate({
-            mutation: CREATE,
+            mutation: CREATECATEGORY,
             variables: {
               category: {
                 label: await this.category.label.value,
@@ -169,6 +219,7 @@ export default class Category extends Vue {
           this.drawer = false;
           NProgress.done();
         } catch (error) {
+          this.$message.error(`新增分类失败:${error}`);
           NProgress.done();
         }
       }
@@ -178,7 +229,7 @@ export default class Category extends Vue {
         try {
           NProgress.start();
           const result = await this.$apollo.mutate({
-            mutation: UPDATE,
+            mutation: UPDATECATEGORY,
             variables: {
               id: this.updateId,
               category: {
@@ -192,25 +243,30 @@ export default class Category extends Vue {
           NProgress.done();
           (this.$refs.form as any).reset();
           this.drawer = false;
+          this.$message(`成功修改${await this.category.label.value}`);
         } catch (error) {
+          this.$message.error(
+            `修改${await this.category.label.value}失败:${error}`,
+          );
           NProgress.done();
         }
       }
     }
   }
-
   private async remove(item: any): Promise<void> {
     try {
       NProgress.start();
       const result = await this.$apollo.mutate({
-        mutation: DELETE,
+        mutation: DELETECATEGORY,
         variables: {
           id: item.id,
         },
       });
       this.allCategory.splice(this.allCategory.indexOf(item.id), 1);
       NProgress.done();
+      this.$message('删除成功');
     } catch (error) {
+      this.$message.error(`删除失败:${error}`);
       NProgress.done();
     }
   }
