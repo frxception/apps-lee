@@ -41,15 +41,15 @@
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <!-- td {{ props.item.slug }}-->
-            <td>{{ props.item.category.label }}</td>
+            <td>
+              <span>{{props.item.category===null ? "页面没有分类":props.item.category.label}}</span>
+            </td>
             <td>{{ props.item.author.name }}</td>
             <td>
-              <span v-if="props.item.status">发布</span>
-              <span v-else>草稿</span>
+              <span>{{props.item.status ? "发布":"草稿"}}</span>
             </td>
             <td>
-              <span v-if="props.item.type===1">文章</span>
-              <span v-else>页面</span>
+              <span>{{props.item.type==1 ? "文章":"页面"}}</span>
             </td>
             <td>
               <span v-if="props.item.publish==='publish'">公开</span>
@@ -57,12 +57,10 @@
               <span v-else>密码保护</span>
             </td>
             <td>
-              <span v-if="props.item.isTop">置顶</span>
-              <span v-else>不置顶</span>
+              <span>{{props.item.isTop ? "置顶":"不置顶"}}</span>
             </td>
             <td>
-              <span v-if="props.item.allowComment">允许</span>
-              <span v-else>不允许</span>
+              <span>{{props.item.allowComment ? "允许":"不允许"}}</span>
             </td>
             <td>
               <v-tooltip top="top">

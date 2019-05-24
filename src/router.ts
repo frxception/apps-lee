@@ -61,6 +61,13 @@ const routes: RouteConfig[] = [
           title: '编辑文章',
         },
       },
+      {
+        path: '/links',
+        component: () => import('@/components/links/index.vue'),
+        meta: {
+          title: '友情链接',
+        },
+      },
     ],
   },
 ];

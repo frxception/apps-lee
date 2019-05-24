@@ -1,3 +1,4 @@
+import { Links } from './fragment';
 import gql from 'graphql-tag';
 import { Category, Tags, Article } from '@/graphql/fragment';
 
@@ -39,6 +40,16 @@ export const GETARTICLEBYID = gql`
         }
     }
     ${Article.Articlefields}
+`;
+
+// 查询全部Links
+export const ALLLINKS = gql`
+    query {
+        allLinks {
+            ...Linksfields
+        }
+    }
+    ${Links.Linksfields}
 `;
 
 

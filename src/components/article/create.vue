@@ -108,6 +108,7 @@
           <v-card flat="flat">
             <v-card-text>
               <v-combobox
+                :disabled="article.type.value===2"
                 item-text="label"
                 item-value="id"
                 clearable="clearable"
@@ -121,6 +122,7 @@
                 label="Tags"
               ></v-combobox>
               <v-select
+                :disabled="article.type.value===2"
                 clearable="clearable"
                 :rules="article.category.rule"
                 v-model="article.category.value"
@@ -134,6 +136,7 @@
                 <v-radio label="保存草稿" :value="false"></v-radio>
               </v-radio-group>
               <v-select
+                :disabled="article.type.value===2"
                 label="公开度"
                 @change="publishSelect"
                 v-model="article.publish.value"
@@ -147,8 +150,19 @@
                 v-model="article.password.value"
                 :rules="article.password.rule"
               ></v-text-field>
-              <v-switch v-model="article.allowComment.value" label="允许评论" color="red"></v-switch>
-              <v-switch v-model="article.isTop.value" v-if="isTop" label="是否置顶" color="red"></v-switch>
+              <v-switch
+                :disabled="article.type.value===2"
+                v-model="article.allowComment.value"
+                label="允许评论"
+                color="red"
+              ></v-switch>
+              <v-switch
+                :disabled="article.type.value===2"
+                v-model="article.isTop.value"
+                v-if="isTop"
+                label="是否置顶"
+                color="red"
+              ></v-switch>
               <v-select
                 item-text="label"
                 item-value="id"
@@ -253,7 +267,7 @@ export default class ArticleCreate extends Vue {
   private template: any = [
     {
       k: 'default',
-      v: '不选择',
+      v: '默认',
     },
     {
       k: 'files',
@@ -308,7 +322,7 @@ export default class ArticleCreate extends Vue {
     // 分类
     category: {
       value: undefined,
-      rule: [(v: string) => !!v || '分类不可为空!'],
+      // rule: [(v: string) => !!v || "分类不可为空!"]
     },
     // 内容类别:{"1":"文章","2":"页面","3":"说说"}
     type: {
@@ -407,6 +421,7 @@ export default class ArticleCreate extends Vue {
               allowComment: await this.article.allowComment.value,
               tags: await this.article.tags.value,
               password: await this.article.password.value,
+              template: await this.article.template.value,
             },
           },
         });

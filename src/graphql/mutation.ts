@@ -1,4 +1,4 @@
-import { Tags } from './fragment';
+import { Tags, Links } from './fragment';
 import gql from 'graphql-tag';
 import { Category, Article } from '@/graphql/fragment';
 
@@ -72,4 +72,32 @@ export const DELETEARTICLE = gql`
     ${Article.Articlefields}
 `;
 
+// 创建Links
+export const CREATELINKS = gql`
+   mutation($links:LinkInput){
+        createLinks(links: $links){
+            ...Linksfields
+        }
+    }
+    ${Links.Linksfields}
+`;
 
+// 修改Links
+export const UPDATELINKS = gql`
+    mutation($id: Int!, $links:LinkInput) {
+        updateLinks(id: $id, links: $links) {
+            ...Linksfields
+        }
+    }
+    ${Links.Linksfields}
+`;
+
+// 删除Links
+export const DELETELINKS = gql`
+    mutation($id:Int) {
+        deleteLinks(id:$id) {
+        ...Linksfields
+        }
+    }
+    ${Links.Linksfields}
+`;

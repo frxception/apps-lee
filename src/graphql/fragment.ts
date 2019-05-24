@@ -7,6 +7,7 @@ export const Category = {
             label
             slug
             desc
+            ArticleCount
             count
             order
             parent
@@ -65,4 +66,22 @@ export const Article = {
     `,
 };
 
+// Links
+export const Links = {
+    Linksfields: gql`
+      fragment Linksfields on Links {
+        id
+        url
+        name
+        email
+        logo
+        target
+        desc
+        status
+        createdAt
+        updatedAt
+        dataVersion
+    }
+    `,
+};
 

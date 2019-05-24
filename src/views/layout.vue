@@ -111,16 +111,16 @@ export default class Layout extends Vue {
       title: '文章',
       path: '/article',
     },
-    // {
-    //   icon: 'pages',
-    //   color: 'indigo',
-    //   title: '页面',
-    //   path: '/pages',
-    // },
     {
       icon: 'message',
       color: 'pink',
       title: '评论',
+    },
+    {
+      icon: 'links',
+      color: 'purple',
+      title: '链接',
+      path: '/links',
     },
     {
       icon: 'folder',

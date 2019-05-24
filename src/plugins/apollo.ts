@@ -30,12 +30,12 @@ export function createProvider(options = {}) {
         fetchPolicy: 'cache-and-network',
       },
     },
-    errorHandler(error) {
+    errorHandler(error: any) {
       // tslint:disable-next-line:no-console
       console.log('%cError',
         'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
-        error.message);
-      if (error.graphQLErrors[0].statusCode === 401) {
+        JSON.stringify(error));
+      if (error.graphQLErrors[0].message.statusCode === 401) {
         router.replace({
           path: '/login',
           query: {

@@ -8,7 +8,7 @@
       <v-data-table
         item-key="id"
         :headers="headers"
-        :items="allCategory"
+        :items="allLinks"
         select-all="select-all"
         no-data-text="还没有分类哦,快去添加一条吧!"
         rows-per-page-text="每页行数"
@@ -17,11 +17,14 @@
           <td>
             <v-checkbox :input-value="props.selected" color="pink" hide-details="hide-details"></v-checkbox>
           </td>
-          <td>{{ props.item.label }}</td>
-          <td>{{ props.item.count }}</td>
+          <td>{{ props.item.name }}</td>
+          <td>{{ props.item.url }}</td>
+          <td>{{ props.item.logo }}</td>
+          <td>{{ props.item.email }}</td>
+          <td>{{ props.item.status ? "显示":"不显示" }}</td>
+          <td>{{ props.item.target }}</td>
           <td>{{ props.item.desc }}</td>
-          <td>{{ props.item.slug }}</td>
-          <td>{{ props.item.ArticleCount }}</td>
+
           <td>
             <v-tooltip top="top">
               <template v-slot:activator="{ on }">
@@ -57,25 +60,25 @@
     >
       <v-toolbar color="blue" dark>
         <v-toolbar-title>
-          <span v-if="updateId === 0">新增分类</span>
-          <span v-else>修改分类</span>
+          <span v-if="updateId === 0">新增友情链接</span>
+          <span v-else>修改友情链接</span>
         </v-toolbar-title>
       </v-toolbar>
       <v-container>
         <v-card flat>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation="lazy-validation">
-              <v-text-field v-model="category.label.value" :rules="category.label.rule" label="分类名"></v-text-field>
-              <v-text-field v-model="category.slug.value" :rules="category.slug.rule" label="别名"></v-text-field>
-              <v-select
-                v-model="category.parent.value"
-                :rules="category.parent.rule"
-                :items="allCategory"
-                item-text="label"
-                item-value="id"
-                label="父级"
-              ></v-select>
-              <v-text-field v-model="category.desc.value" :rules="category.desc.rule" label="描述"></v-text-field>
+              <v-text-field v-model="links.url.value" :rules="links.url.rule" label="友情链接地址"></v-text-field>
+              <v-text-field v-model="links.name.value" :rules="links.name.rule" label="友情链接名称"></v-text-field>
+              <v-text-field v-model="links.email.value" :rules="links.email.rule" label="站长EMAIL"></v-text-field>
+              <v-text-field v-model="links.logo.value" :rules="links.logo.rule" label="友情链接logo"></v-text-field>
+              <v-text-field
+                v-model="links.target.value"
+                :rules="links.target.rule"
+                label="友情链接打开方式"
+              ></v-text-field>
+              <v-text-field v-model="links.desc.value" :rules="links.desc.rule" label="友情链接描述"></v-text-field>
+              <v-text-field v-model="links.target.value" :rules="links.target.rule" label="状态"></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -94,22 +97,18 @@
   </v-card>
 </template>
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import NProgress from 'nprogress';
-import { ALLCATEGORY } from '@/graphql/query';
-import {
-  CREATECATEGORY,
-  UPDATECATEGORY,
-  DELETECATEGORY,
-} from '@/graphql/mutation';
+import { Vue, Component, Watch } from "vue-property-decorator";
+import NProgress from "nprogress";
+import { ALLLINKS } from "@/graphql/query";
+import { CREATELINKS, UPDATELINKS, DELETELINKS } from "@/graphql/mutation";
 @Component({
   apollo: {
-    allCategory() {
+    allLinks() {
       return {
-        query: ALLCATEGORY,
+        query: ALLLINKS
       };
-    },
-  },
+    }
+  }
 })
 export default class Category extends Vue {
   // 右侧表单
@@ -117,7 +116,7 @@ export default class Category extends Vue {
   // 修改的id
   private updateId: number = 0;
   // 所有分类
-  private allCategory: any;
+  private allLinks: any;
   // 加载
   private loading: boolean = false;
   // 选中
@@ -125,64 +124,86 @@ export default class Category extends Vue {
   // 表头
   private headers: any = [
     {
-      text: '名称',
-      value: 'label',
-      sortable: true,
+      text: "名称",
+      value: "name",
+      sortable: true
       // align: 'left',
     },
     {
-      text: '子分类(数量)',
-      sortable: false,
+      text: "地址(url)",
+      sortable: false
       // align: 'center'
     },
     {
-      text: '描述',
-      sortable: false,
+      text: "logo",
+      sortable: false
       // align: 'center'
     },
     {
-      text: '别名',
-      sortable: false,
+      text: "email",
+      sortable: false
       // align: 'center'
     },
     {
-      text: '文章数/篇',
-      sortable: false,
+      text: "显示状态",
+      sortable: false
       // align: 'center'
     },
     {
-      text: '创建时间',
-      sortable: false,
+      text: "打开方式",
+      sortable: false
       // align: 'center'
     },
     {
-      text: '操作',
-      sortable: false,
-      align: 'center',
+      text: "desc",
+      sortable: false
+      // align: 'center'
     },
+    {
+      text: "创建时间",
+      sortable: false
+      // align: 'center'
+    },
+    {
+      text: "操作",
+      sortable: false,
+      align: "center"
+    }
   ];
   // 验证
   private valid: boolean = true;
-  private category: any = {
-    label: {
-      value: '',
-      rule: [(v: string) => !!v || '分类名必须填写哦!'],
+  private links: any = {
+    url: {
+      value: "",
+      rule: [(v: string) => !!v || "url必须填写哦!"]
     },
-    slug: {
-      value: '',
-      rule: [],
+    name: {
+      value: "",
+      rule: [(v: string) => !!v || "友情连接名称必须填写哦!"]
     },
-    parent: {
-      value: undefined,
-      rule: [],
+    email: {
+      value: null,
+      rule: []
+    },
+    logo: {
+      value: "",
+      rule: []
+    },
+    target: {
+      value: "_blank",
+      rule: []
     },
     desc: {
-      value: '这是一段默认的描述',
-      rule: [],
+      value: "这是一段默认的描述",
+      rule: []
     },
+    status: {
+      value: Boolean(true),
+      rule: []
+    }
   };
   // 表单内容
-  @Watch('drawer')
+  @Watch("drawer")
   private onDrawer(val: object, oldVal: any) {
     if (!val) {
       this.updateId = 0;
@@ -190,10 +211,15 @@ export default class Category extends Vue {
     }
   }
   private updete(data: any) {
-    this.category.label.value = data.label;
-    this.category.slug.value = data.slug;
-    this.category.desc.value = data.desc;
-    this.category.parent.value = data.parent;
+    this.links.url.value = data.url;
+    this.links.name.value = data.name;
+    this.links.desc.value = data.desc;
+    this.links.target.value = data.target;
+    this.links.status.value = Boolean(data.status);
+
+    this.links.logo.value = data.logo;
+    this.links.email.value = data.email;
+
     this.updateId = data.id;
     this.drawer = true;
   }
@@ -204,17 +230,20 @@ export default class Category extends Vue {
         try {
           NProgress.start();
           const result = await this.$apollo.mutate({
-            mutation: CREATECATEGORY,
+            mutation: CREATELINKS,
             variables: {
-              category: {
-                label: await this.category.label.value,
-                slug: await this.category.slug.value,
-                desc: await this.category.desc.value,
-                parent: await this.category.parent.value,
-              },
-            },
+              links: {
+                url: await this.links.url.value,
+                name: await this.links.name.value,
+                desc: await this.links.desc.value,
+                email: await this.links.email.value,
+                logo: await this.links.logo.value,
+                target: await this.links.target.value,
+                status: await this.links.status.value
+              }
+            }
           });
-          this.allCategory.push(result.data.createCategory);
+          this.allLinks.push(result.data.createLinks);
           (this.$refs.form as any).reset();
           this.drawer = false;
           NProgress.done();
@@ -229,24 +258,27 @@ export default class Category extends Vue {
         try {
           NProgress.start();
           const result = await this.$apollo.mutate({
-            mutation: UPDATECATEGORY,
+            mutation: UPDATELINKS,
             variables: {
               id: this.updateId,
-              category: {
-                label: await this.category.label.value,
-                slug: await this.category.slug.value,
-                desc: this.category.desc.value,
-                parent: await this.category.parent.value,
-              },
-            },
+              links: {
+                url: await this.links.url.value,
+                name: await this.links.name.value,
+                desc: await this.links.desc.value,
+                email: await this.links.email.value,
+                logo: await this.links.logo.value,
+                target: await this.links.target.value,
+                status: await this.links.status.value
+              }
+            }
           });
           NProgress.done();
           (this.$refs.form as any).reset();
           this.drawer = false;
-          this.$message(`成功修改${await this.category.label.value}`);
+          this.$message(`成功修改${await this.links.name.value}`);
         } catch (error) {
           this.$message.error(
-            `修改${await this.category.label.value}失败:${error}`,
+            `修改${await this.links.name.value}失败:${error}`
           );
           NProgress.done();
         }
@@ -257,14 +289,14 @@ export default class Category extends Vue {
     try {
       NProgress.start();
       const result = await this.$apollo.mutate({
-        mutation: DELETECATEGORY,
+        mutation: DELETELINKS,
         variables: {
-          id: item.id,
-        },
+          id: item.id
+        }
       });
-      this.allCategory.splice(this.allCategory.indexOf(item.id), 1);
+      this.allLinks.splice(this.allLinks.indexOf(item.id), 1);
       NProgress.done();
-      this.$message('删除成功');
+      this.$message("删除成功");
     } catch (error) {
       this.$message.error(`删除失败:${error}`);
       NProgress.done();
