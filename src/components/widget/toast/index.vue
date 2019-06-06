@@ -1,22 +1,22 @@
 <template>
-  <v-snackbar
-    class="application"
-    :timeout="timeout"
-    :color="color"
-    :bottom="y === 'bottom'"
-    :top="y === 'top'"
-    :left="x === 'left'"
-    :right="x === 'right'"
-    :auto-height="autoHeight"
-    :multi-line="multiLine"
-    :vertical="vertical"
-    v-model="active"
-    @click="dismiss"
-  >
-    <v-icon class="mr-4" dark left v-if="!!icon">{{ icon }}</v-icon>
-    <span>{{message}}</span>
-    <v-btn color="pink" flat @click="active = false">Close</v-btn>
-  </v-snackbar>
+	<v-snackbar
+		class="application"
+		:timeout="timeout"
+		:color="color"
+		:bottom="y === 'bottom'"
+		:top="y === 'top'"
+		:left="x === 'left'"
+		:right="x === 'right'"
+		:auto-height="autoHeight"
+		:multi-line="multiLine"
+		:vertical="vertical"
+		v-model="active"
+		@click="dismiss"
+	>
+		<v-icon color="#FFFFFF80" class="mr-4" dark left v-if="!!icon">{{ icon }}</v-icon>
+		<span>{{ message }}</span>
+		<v-btn color="#FFFFFF80" icon fab flat @click="active = false"><v-icon dark>clear</v-icon></v-btn>
+	</v-snackbar>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop, Watch, Emit } from 'vue-property-decorator';

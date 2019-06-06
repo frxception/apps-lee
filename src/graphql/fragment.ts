@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 // 分类
 export const Category = {
     Categoryfields: gql`
-      fragment Categoryfields on Category {
+        fragment Categoryfields on Category {
             id
             label
             slug
@@ -15,27 +15,27 @@ export const Category = {
             updatedAt
             # children
         }
-    `,
-};
+    `
+}
 
 // TAGS
 export const Tags = {
     Tagsfields: gql`
-      fragment Tagsfields on Tags {
-        id
-        label
-        colro
-        hot
-        createdAt
-        updatedAt
-    }
-    `,
-};
+        fragment Tagsfields on Tags {
+            id
+            label
+            colro
+            hot
+            createdAt
+            updatedAt
+        }
+    `
+}
 
 // 文章
 export const Article = {
     Articlefields: gql`
-      fragment Articlefields on Article {
+        fragment Articlefields on Article {
             id
             title
             slug
@@ -63,25 +63,24 @@ export const Article = {
             createdAt
             updatedAt
         }
-    `,
-};
+    `
+}
 
 // Links
 export const Links = {
     Linksfields: gql`
-      fragment Linksfields on Links {
-        id
-        url
-        name
-        email
-        logo
-        target
-        desc
-        status
-        createdAt
-        updatedAt
-        dataVersion
-    }
-    `,
-};
-
+        fragment Linksfields on Links {
+            id
+            url
+            name
+            email
+            logo
+            target
+            desc
+            status
+            createdAt
+            updatedAt
+            dataVersion
+        }
+    `
+}

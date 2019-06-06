@@ -1,6 +1,6 @@
-import { Links } from './fragment';
-import gql from 'graphql-tag';
-import { Category, Tags, Article } from '@/graphql/fragment';
+import { Links } from './fragment'
+import gql from 'graphql-tag'
+import { Category, Tags, Article } from '@/graphql/fragment'
 
 // 查询全部分类
 export const ALLCATEGORY = gql`
@@ -10,7 +10,7 @@ export const ALLCATEGORY = gql`
         }
     }
     ${Category.Categoryfields}
-`;
+`
 
 // 查询全部Tag
 export const ALLTAGS = gql`
@@ -20,7 +20,7 @@ export const ALLTAGS = gql`
         }
     }
     ${Tags.Tagsfields}
-`;
+`
 
 // 查询全部文章
 export const ALLARTICLE = gql`
@@ -30,17 +30,17 @@ export const ALLARTICLE = gql`
         }
     }
     ${Article.Articlefields}
-`;
+`
 
 // 根据id查询文章
 export const GETARTICLEBYID = gql`
-    query($id:Int!) {
-        getArticleById(id:$id) {
+    query($id: Int!) {
+        getArticleById(id: $id) {
             ...Articlefields
         }
     }
     ${Article.Articlefields}
-`;
+`
 
 // 查询全部Links
 export const ALLLINKS = gql`
@@ -50,6 +50,4 @@ export const ALLLINKS = gql`
         }
     }
     ${Links.Linksfields}
-`;
-
-
+`

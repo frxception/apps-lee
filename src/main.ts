@@ -1,29 +1,32 @@
-import Vue from 'vue';
-import moment from 'moment';
-import '@/plugins/vuetify';
-import App from '@/App.vue';
-import router from '@/router';
-import store from '@/store';
-import '@/registerServiceWorker';
-import { createProvider } from '@/plugins/apollo';
-import '@/app.styl';
+import Vue, { CreateElement } from 'vue'
+import './plugins/vuetify'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import './registerServiceWorker'
+import { createProvider } from './plugins/apollo'
+import i18n from './plugins/i18n'
+import '@/app.styl'
+import moment from 'moment'
+import MultiFiltersPlugin from './plugins/multifilters'
 
-moment.locale('zh-cn');
+Vue.use(MultiFiltersPlugin)
 
-Vue.config.productionTip = false;
+moment.locale('zh-cn')
 
-Vue.directive('time', {
-  bind(el: any, binding: any) {
-    el.innerHTML = moment(binding.value).startOf('hour').fromNow();
-    // el.__timeout__ = setInterval(() => {
-    //   el.innerHTML = moment(binding.value).startOf('hour').fromNow();
-    // }, 60000);
-  },
-});
+Vue.config.productionTip = false
+
+Vue.filter('diffForHumans', (value: string) => {
+    return moment(value)
+        .utc()
+        .subtract()
+        .calendar()
+})
 
 new Vue({
-  router,
-  store,
-  apolloProvider: createProvider(),
-  render: (h) => h(App),
-}).$mount('#app');
+    router,
+    store,
+    apolloProvider: createProvider(),
+    i18n,
+    render: (h: CreateElement) => h(App)
+}).$mount('#app')
